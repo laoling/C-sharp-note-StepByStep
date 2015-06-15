@@ -1,0 +1,4 @@
+C:\Users\Administrator\AppData\Local\Temporary Projects\ConsoleExampleApplication1\bin\Debug\ConsoleExampleApplication1.exe
+C:\Users\Administrator\AppData\Local\Temporary Projects\ConsoleExampleApplication1\bin\Debug\ConsoleExampleApplication1.pdb
+C:\Users\Administrator\AppData\Local\Temporary Projects\ConsoleExampleApplication1\obj\x86\Debug\ConsoleExampleApplication1.exe
+C:\Users\Administrator\AppData\Local\Temporary Projects\ConsoleExampleApplication1\obj\x86\Debug\ConsoleExampleApplication1.pdb
