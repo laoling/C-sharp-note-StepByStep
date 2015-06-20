@@ -334,3 +334,56 @@ Q2、编写一个程序，其中包含练习1的逻辑，要求用户输入两�
 
 Answer：练习程序如下所示：
 
+		using System;
+		using System.Collections.Generic;
+		using System.Linq;
+		using System.Text;
+		
+		namespace ConsoleApplication1
+		{
+		    class Program
+		    {
+		        static void Main(string[] args)
+		        {
+		            //问题二解决方案
+		
+		            bool numsOK = false;
+		            double var1, var2;
+		            var1 = 0;
+		            var2 = 0;
+		
+		            while (!numsOK)
+		            {
+		                Console.WriteLine("请输入一个数字：");
+		                var1 = Convert.ToDouble(Console.ReadLine());
+		                Console.WriteLine("请再输入一个数字：");
+		                var2 = Convert.ToDouble(Console.ReadLine());
+		
+		                if ((var1 > 10) && (var2 > 10))
+		                {
+		                    Console.WriteLine("输入的两个数字不能都大于十，请重新输入！");
+		                }
+		                else
+		                {
+		                    numsOK = true;
+		                }
+		            }
+		
+		            Console.WriteLine("您输入的数字是{0}和{1}.", var1, var2);
+		            Console.ReadKey();
+		        }
+		    }
+		}
+
+Q3、下面的代码有什么问题？
+
+	int i;
+	for (i = 1; i <= 10; i++)
+	{
+		if ((i % 2) = 0)
+			continue;
+		Console.WriteLine(i);
+	}
+
+Answer:代码中if的判断语句`(i % 2) = 0`需要修改为`(i % 2) == 0`。单一的等号用于赋值，双等号才用于判断相等。
+
