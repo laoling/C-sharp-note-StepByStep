@@ -116,3 +116,105 @@
 	Convert.ToUInt32(val);
 	Convert.ToUInt64(val);
 
+#### 二、复杂的变量类型
+
+我们这里主要介绍C#中的3个复杂变量类型：枚举、结构和数组。
+
+###### 2.1 枚举
+
+有时候希望变量提取的是一个固定集合的值，这时候就需要使用枚举。枚举需要声明和描述一个用户定义的类型，再声明这个新类型的变量。
+
+【定义枚举】
+
+可以使用enum关键字来定义枚举，如下所示：
+
+	enum <typeName>
+	{
+		<value1>,
+		<value2>,
+		<value3>,
+		...
+		<valueN>
+	}
+
+接着声明这个新类型的变量：
+
+	<typeName> <varName>;
+
+并赋值：
+
+	<varName> = <typeName>.<value>;
+
+枚举使用一个基本类型来存储。枚举类型可以提取的每个值都存储为该基本类型的一个值，默认情况下该类型为int。在声明中添加类型，就可以指定其他基本类型：
+
+	enum <typeName> : <underlyingType>
+	{
+		<value1>,
+		<value2>,
+		<value3>,
+		...
+		<valueN>
+	}
+
+枚举的基本类型可以是byte、sbyte、short、ushort、int、uint、long和ulong。
+
+在默认情况下，每个值会根据定义的顺序，自动赋给对应的基本类型值。我们这里可以指定这个赋值过程：使用=，并指定每个枚举的实际值：
+
+	enum <typeName> : <underlyingType>
+	{
+		<value1> = <actualVal1>,
+		<value2> = <actualVal2>,
+		<value3> = <actualVal3>,
+		...
+		<valueN> = <actualValN>
+	}
+
+还可以使用一个值作为另一个枚举的基础值，为多个枚举指定相同的值：
+
+	enum <typeName> : <underlyingType>
+	{
+		<value1> = <actualVal1>,
+		<value2> = <value1>,
+		<value3>,
+		...
+		<valueN> = <actualValN>
+	}
+
+没有赋值的任何值都会自定获得一个初始值，这里使用的值是从比上一个明确声明的值大于1开始的序列。例如上面的代码中，<value3>的值是<value1>+1。
+
+这里赋值可能会造成一些不可预料的错误，具体在赋值过程中需要注意。
+
+###### 2.2 结构
+
+结构就是由几个数据组成的数据结构，这些数据可能具有不同的类型。根据这个结构可以定义自己的变量类型。
+
+【定义结构】
+
+结构是使用struct关键字来定义的，如下所示：
+
+	struct <typeName>
+	{
+		<memberDeclarations>
+	}
+
+<memberDeclarations>包含变量的声明，其格式与往常一样。每个成员的声明都采取如下形式：
+
+	<accessibility> <type> <name>;
+
+例如下面的例子：
+
+	struct route
+	{
+		public orientation direction;
+		public double distance;
+	}
+
+定义新的结构之后，就可以定义新类型的变量：
+
+	route myRoute;
+
+还可以通过句点字符访问这个组合变量中的数据成员：
+
+	myRoute.direction = orientation.north;
+	myRoute.distance = 2.5;
+
