@@ -146,3 +146,180 @@ System.Object包含的方法如下：
 
 这些是.NET Framework中对象类型必须支持的基本方法。但我们可能从不使用其中某些类型。
 
+
+三、构造函数和析构函数
+
+建立代码时，编译器一般会自动添加构造函数和析构函数。但是如果需要，可以提供自己的构造函数和析构函数，以便初始化对象和清理对象。
+
+下面语法可以把简单的构造函数添加到列表中：
+
+```csharp
+class MyClass
+{
+	public MyClass()
+	{
+		//Constructor code.
+	}
+}
+```
+
+此构造函数与包含它的类同名，且没有参数（使之成为类的默认构造函数），这是一个公共函数，所以类的对象可以使用这个函数进行实例化。也可使用私有的默认构造函数，即不能使用这个构造函数来创建这个类的对象实例。
+
+```csharp
+class MyClass
+{
+	private MyClass()
+	{
+		// Constructor code.
+	}
+}
+```
+
+最后也可以用相同的方法给类添加非默认的构造函数，其方法是提供参数，如：
+
+```csharp
+class MyClass
+{
+	pubilc MyClass()
+	{
+		// Default constructor code.
+	}
+
+	public MyClass()
+	{
+		// Mondefault constructor code (uses myInt).
+	}
+}
+```
+
+可提供的构造函数数量不受限制。
+
+我们使用略微不同的语法来声明析构函数。在.NET中使用析构函数叫做Finalize()，但这不是我们用于声明析构函数的名称。使用下面的代码：
+
+```csharp
+class MyClass
+{
+	~MyClass()
+	{
+		// Destructor body.
+	}
+}
+```
+
+类的析构函数是由~前缀的类名来声明。在调用这个析构函数后，还隐式调用基类的析构函数，包括System.Object根类中的Finalize()调用。这个技术可以让.NET Framework确保调用Finalize()。
+
+【构造函数的执行序列】
+
+为了实例化派生的类必须实例化它的基类。进一步必须实例化这个基类的基类，一直到实例化System.Object为止。结果无论使用什么构造函数实例化一个类，总是首先调用System.Object.Object。无论在派生类上使用什么构造函数，除非明确指定，否则就使用基类的默认构造函数。下面我们写个例子，简单说明执行的顺序：
+
+```csharp
+public class MyBaseClass
+{
+	public MyBaseClass()
+	{
+	}
+
+	public MyBaseClass(int i)
+	{
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	public MyDerivedClass()
+	{
+	}
+
+	public MyDerivedClass(int i)
+	{
+	}
+
+	public MyDerivedClass(int i, int j)
+	{
+	}
+}
+```
+
+如果以下的方式实例化MyDerivedClass：
+
+```csharp
+MyDerivedClass myObj = new MyDerivedClass();
+```
+
+则执行的顺序如下：
+
+执行System.Object.Object()构造函数 > 执行MyBaseClass.MyBaseClass()构造函数 > 执行MyDerivedClass.MyDerivedClass()构造函数。
+
+如果使用下面的语句：
+
+```csharp
+MyDerivedClass myObj = new MyDerivedClass(4);
+```
+
+则执行的顺序如下：
+
+执行System.Object.Object()构造函数 > 执行MyBaseClass.MyBaseClass()构造函数 > 执行MyDerivedClass.MyDerivedClass(int i)构造函数。
+
+如果使用下面的语句：
+
+```csharp
+MyDerivedClass myObj = new MyDerivedClass(4, 8);
+```
+
+则执行的顺序如下：
+
+执行System.Object.Object()构造函数 > 执行MyBaseClass.MyBaseClass()构造函数 > 执行MyDerivedClass.MyDerivedClass(int i, int j)构造函数。
+
+其实这里我们可以把使用int i参数的代码几种在MyBaseClass(int i)中，那么在MyDerivedClass(int i, int j)构造函数中要处理的工作就比较少了，只需要处理int j参数。
+
+为此只需要使用构造函数初始化器，它把代码放在方法定义的冒号后面。例如可以在派生类的构造函数定义中指定所使用的基类构造函数，如下所示：
+
+```csharp
+public class MyDerviedClass : MyBaseClass
+{
+	...
+	
+	public MyDerviedClass(int i, int j) : base(i)
+	{
+	}
+}
+```
+
+其中base关键字指定实例化过程使用基类中有指定参数的构造函数。这里通过参数i就会执行我们期望的事件序列。也可以使用这个关键字指定基类构造函数的字面值，如：
+
+```csharp
+public class MyDerviedClass : MyBaseClass
+{
+	...
+	
+	public MyDerviedClass(int i, int j) : base(5)
+	{
+	}
+}
+```
+
+这段代码执行下述序列：
+
+执行System.Object.Object()构造函数 > 执行MyBaseClass.MyBaseClass(int i)构造函数 > 执行MyDerivedClass.MyDerivedClass()构造函数。
+
+除了使用base关键字外，这里还可以将另一个关键字this用作构造函数初始化器。这个关键字指定在调用指定的构造函数前，.NET实例化过程对当前类使用非默认的构造函数。例如：
+
+```csharp
+public class MyDerviedClass : MyBaseClass
+{
+	public MyDerviedClass() : this(5, 6)
+	{
+	}
+	...
+	
+	public MyDerviedClass(int i, int j) : base(i)
+	{
+	}
+}
+```
+
+这段代码将执行下述序列：
+
+执行System.Object.Object()构造函数 > 执行MyBaseClass.MyBaseClass(int i)构造函数 > 执行MyDerivedClass.MyDerivedClass(int i, int j)构造函数 > 执行MyDerivedClass.MyDerivedClass()构造函数。
+
+唯一的限制是使用构造函数初始化器只能指定一个构造函数。但是并不是很严格的限制。我们仍可以构造相当复杂的执行序列。注意在定义构造函数时不要创建无线循环。
