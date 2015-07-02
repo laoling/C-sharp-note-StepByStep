@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chapter09ClassLib", "Chapter09ClassLib\Chapter09ClassLib.csproj", "{BB8EB7F1-C9AF-486A-88C5-FD99CE106C94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB8EB7F1-C9AF-486A-88C5-FD99CE106C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8EB7F1-C9AF-486A-88C5-FD99CE106C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8EB7F1-C9AF-486A-88C5-FD99CE106C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8EB7F1-C9AF-486A-88C5-FD99CE106C94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

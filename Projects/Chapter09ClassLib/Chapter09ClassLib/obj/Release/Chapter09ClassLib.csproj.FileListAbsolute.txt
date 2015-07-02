@@ -1,0 +1,4 @@
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter09ClassLib\bin\Release\Chapter09ClassLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter09ClassLib\bin\Release\Chapter09ClassLib.pdb
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter09ClassLib\obj\Release\Chapter09ClassLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter09ClassLib\obj\Release\Chapter09ClassLib.pdb
