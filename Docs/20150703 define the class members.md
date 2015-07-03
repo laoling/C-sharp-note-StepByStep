@@ -210,4 +210,203 @@ public int MyIntProp
 访问器可以使用的访问修饰符取决于属性的可访问性，访问器的可访问性不能高于它所属的属性。也就是说，私有属性对它的访问器不能包含任何可访问修饰符，而公有属性可以对其访问器使用所有的可访问修饰符。
 
 
+#### 1.4 自动属性
+
+利用自动属性可以简化语法声明属性。C#编译器会自动添加未键入的内容。具体而言编译器会声明一个用于存储属性的私有字段，并在属性的get和set块中使用该字段，我们无需考虑细节。使用下面的代码既可以定义一个自动属性：
+
+```csharp
+public int MyIntProp
+{
+	get;
+	set;
+}
+```
+
+甚至可以在一行代码中定义自动属性，以便节省空间，而不会过度降低属性的可读性：
+
+```csharp
+public int MyIntProp {get; set;}
+```
+
+自动属性唯一的限制是它们必须包含get和set存取器，无法使用这种方式定义只读或只写属性。
+
+
+## 二、类成员的其他话题 ##
+
+#### 2.1 隐藏基类方法
+
+当从基类继承一个非抽象的成员时，也就继承了其实现代码。如果继承的成员是虚拟的，就可以用override关键字重写这段实现代码。无论继承的成员是否为虚拟，都可以隐藏这些实现代码。实际中是很有用的，比如当继承的公共成员不像预期的那样工作时，就可以隐藏它。代码如下：
+
+```csharp
+public class MyBaseClass
+{
+	public void DoSomething()
+	{
+		//Base implementation.
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	public void DoSomething()
+	{
+		// Derived class implementation, hides base implementation.
+	}
+}
+```
+
+这段代码运行正常，但会产生一个警告，说明隐藏了一个基类成员。如果无意间隐藏的，就要改正错误。如果确实要隐藏该成员，就可以使用new关键字显式地表达意图：
+
+```csharp
+public class MyDerivedClass : MyBaseClass
+{
+	new public void DoSomething()
+	{
+		// Derived class implementation, hides base implementation.
+	}
+}
+```
+
+注意隐藏基类成员和重写它们的区别。看下面的代码：
+
+```csharp
+public class MyBaseClass
+{
+	public virtual void DoSomething()
+	{
+		Console.WriteLine("Base imp");
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	public override void DoSomething()
+	{
+		Console.WriteLine("Derived imp");
+	}
+}
+```
+
+其中重写方法将替换基类中的实现代码，这样，下面的代码就将使用新版本，即使这是通过基类类型进行的，情况也是这样（使用多态性）：
+
+```csharp
+MyDerviedClass myObj = new myDerivedClass();
+MyBaseClass myBaseObj;
+myBaseObj = myObj;
+myBaseObj.DoSomething();
+```
+
+结果如下：`Derived imp`
+
+另外还可以使用下面的代码隐藏基类方法：
+
+```csharp
+public class MyBaseClass
+{
+	public virtual void DoSomething()
+	{
+		Console.WriteLine("Base imp");
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	new public void DoSomething()
+	{
+		Console.WriteLine("Derived imp");
+	}
+}
+```
+
+基类的方法不必是虚拟的，但结果是一样的，只需要改动一行即可。对于基类的虚拟方法和非虚拟方法来说，其结果如下：`Base imp`
+
+尽管隐藏了基类的实现代码，但仍可以通过基类访问它。
+
+#### 2.2 调用重写或隐藏的基类方法
+
+无论是重写成员还是隐藏成员，都可以在派生类内部访问基类成员。这在许多情况下都是很有用的：
+
+* 要对派生类的用户隐藏继承的公共成员，但仍能在类中访问其功能。
+* 要给继承的虚拟成员添加实现代码，而不是简单地用重写的新执行代码替换它。
+
+可以使用base关键字，它表示包含在派生类中的基类的实现代码。例如：
+
+```csharp
+public class MyBaseClass
+{
+	public virtual void DoSomething()
+	{
+		//Base implementation.
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	public override void DoSomething()
+	{
+		//Derived class implementation, extends base class implementation.
+		base.DoSomething();
+		//More dervied class implementation.
+	}
+}
+```
+
+这段代码执行包含在MyBaseClass中的DoSomething()版本，MyBaseClass是MyDerivedClass的基类，而DoSomething()版本包含在MyDerivedClass中。因为base使用的是对象实例，所以在静态成员中使用它会出错。
+
+【this关键字】
+
+除了base关键字，这里还能使用this关键字。与base一样，this也可以用在类成员的内部，且该关键字也引用对象实例。只是this引用的是当前的对象实例（即不能在静态成员中使用this关键字，因为静态成员不是对象实例的一部分）。
+
+this关键字最常用的功能是把当前对象实例的引用传递给一个方法。如下例：
+
+```csharp
+public void doSomething()
+{
+	MyTargetClass myObj = new MyTargetClass();
+	myObj.DoSomethingWith(this);
+}
+```
+
+其中被实例化的MyTargetClass实例有一个DoSomethingWith()方法，该方法带一个参数，其类型与包含上述方法的类兼容。这个参数类型可以是类的类型、由这个类继承的类类型，或者由这个类或System.Object实现的一个接口。
+
+this关键字的另一个常见用法是限定本地类型的成员，例如：
+
+```csharp
+public class MyClass
+{
+	private int someData;
+
+	public int someData
+	{
+		get
+		{
+			return this.someData;
+		}
+	}
+}
+```
+
+#### 2.3 嵌套的类型定义
+
+除了在命名空间中定义类外，还可以在其他类中定义类。如果这么做，就可以在定义中使用各种访问修饰符，而不仅仅是public和internal，也可以使用new关键字隐藏继承于基类的类型定义。
+
+eg： 在定义了MyClass中也定义了一个嵌套的类myNestedClass:
+
+```csharp
+public class MyClass
+{
+	public class myNestedClass
+	{
+		public int nestedClassField;
+	}
+}
+```
+
+如果要在MyClass外部实例化myNestedClass，就必须限定名称，如：
+
+```csharp
+MyClass.myNestedClass myObj = new MyClass.myNestedClass();
+```
+
+这个功能主要用于定义对于其包含类来说是私有的类，这样，命名空间中的其他代码就不能访问它。
 
