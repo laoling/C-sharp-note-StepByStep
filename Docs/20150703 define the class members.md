@@ -410,3 +410,187 @@ MyClass.myNestedClass myObj = new MyClass.myNestedClass();
 
 这个功能主要用于定义对于其包含类来说是私有的类，这样，命名空间中的其他代码就不能访问它。
 
+
+## 三、接口的实现 ##
+
+这里介绍下如何定义和实现接口。前面我们介绍过接口的定义：
+
+```csharp
+interface IMyInterface
+{
+	//Interface members.
+}
+```
+
+接口成员的定义也与类成员定义相似。但有几个重要区别：
+
+* 不允许使用访问修饰符（public、private、protected、internal），所有的接口成员都是公共的。
+* 接口成员不能包含代码体。
+* 接口不能定义字段成员。
+* 接口成员不能使用关键字static、virtual、abstract、sealed来定义。
+* 类型定义成员是禁止的。
+
+但要隐藏继承了基接口的成员，可以用关键字new来定义它们，例如：
+
+```csharp
+interface IMyBaseInterface
+{
+	void DoSomething();
+}
+
+interface IMyDerivedInterface : IMyBaseInterface
+{
+	new void DoSomething();
+}
+```
+
+其执行方式和隐藏继承的类成员的方式一样。在接口中定义的属性可以定义访问块get和set中的哪一个能用于该属性（或同时用于该属性）。例如：
+
+```csharp
+interface IMyInterface
+{
+	int MyInt { get; set;}
+}
+```
+
+其中int属性MyInt有get和set存取器。对于访问级别有更严格限制的属性来说，可以省略它们中的任何一个。这个语法类似于自动属性，但自动属性是为类定义的，自动属性必须包含get和set存取器。
+
+接口没有指定应如何存储属性数据。接口不能指定字段，例如用于存储属性数据的字段。最后接口和类一样，可以定义为类的成员，但不能定义为其他接口的成员，因为接口不能包含类型定义。
+
+【在类中实现接口】
+
+实现接口的类必须包含该接口所以成员的实现代码，且必须匹配指定的签名，包括匹配指定的get和set块，并且必须是公共的。例如：
+
+```csharp
+public interface IMyInterface
+{
+	void DoSomething();
+	void DoSomethingElse();
+}
+
+public class MyClass : IMyInterface
+{
+	public void DoSomething()
+	{
+	}
+
+	public void DoSomethingElse()
+	{
+	}
+}
+```
+
+可以使用关键字virtual或abstract来实现接口成员，但不能使用static或const。还可以在基类上实现接口成员，例如：
+
+```csharp
+public interface IMyInterface
+{
+	void DoSomething();
+	void DoSomethingElse();
+}
+
+public class MyBaseClass
+{
+	public void DoSomething()
+	{
+	}
+}
+
+public class MyDerivedClass : MyBaseClass, IMyInterface
+{
+	public void DoSomethingElse()
+	{
+	}
+
+}
+```
+
+继承一个实现给定接口的基类，就意味着派生类隐式地支持这个接口，例如：
+
+```csharp
+public interface IMyInterface
+{
+	void DoSomething();
+	void DoSomethingElse();
+}
+
+public class MyBaseClass : IMyInterface
+{
+	public virtual void DoSomething()
+	{
+	}
+
+	public virtual void DoSomethingElse()
+	{
+	}
+}
+
+public class MyDerivedClass : MyBaseClass
+{
+	public override void DoSomething()
+	{
+	}
+
+}
+```
+
+显然在基类中把实现代码定义为虚拟，派生类就可以替换该实现代码，而不是隐藏它们。如果要使用new关键字隐藏一个基类成员，而不是重写它，则方法IMyInterface.DoSomething()就总是引用基类版本，即使通过这个接口来访问派生类，也是这样。
+
+1、显式实现接口成员
+
+可以由类显式的实现接口成员。这么做，该成员只能通过接口来访问，不能通过类来访问。
+
+如果隐式实现成员，可以通过类和接口来访问。如：类MyClass隐式实现接口IMyInterface的方法DoSomething()，下面的代码就是有效的：
+
+```csharp
+MyClass myObj = new MyClass();
+myObj.DoSomething();
+```
+
+或这样也是有效的：
+
+```csharp
+MyClass myObj = new MyClass();
+IMyInterface myInt = myObj;
+myInt.DoSomething();
+```
+
+另外如果MyDerivedClass显式实现DoSomething()，就只能使用后一种技术。代码如下：
+
+```csharp
+public class MyClass : IMyInterface
+{
+	void IMyInterface.DoSomething()
+	{
+	}
+
+	public void DoSomethingElse()
+	{
+	}
+}
+```
+
+其中DoSomething()是显式实现的，而DoSomethingElse()是隐式实现的。后者才能通过MyClass对象实例来访问。
+
+2、用非公共的可访问性添加属性存取器
+
+前面说过如果实现带属性的接口，就必须实现匹配的get/set存取器。这并不是绝对正确的，如果在定义属性的接口中只包含set块，就可以给类中的属性添加get块，反之亦然。但是只有所添加的存取器的可访问修饰符比接口中定义的存取器的可访问修饰符更严格时，才能这么做。因为按照定义，接口定义的存取器是公共的，也就是说，只能添加非公共的存取器。例如：
+
+```csharp
+public interface IMyInterface
+{
+	int MyIntProperty
+	{
+		get;
+	}
+}
+
+public class MyBaseClass : IMyInterface
+{
+	public int MyIntProperty { get; protected set; }
+}
+```
+
+
+
+
