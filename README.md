@@ -41,5 +41,5 @@ C-sharp-note-StepByStep
 |——  Addon （用于存储C#遇到的问题及从其他地方看到的实例或问题）
 ```
 
-Time:该文档修改于2015-07-05 18:40
-Author:老零[http://github.com/laoling]
+* Time:该文档修改于2015-07-05 18:40
+* Author:老零[http://github.com/laoling]
