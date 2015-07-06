@@ -591,6 +591,80 @@ public class MyBaseClass : IMyInterface
 }
 ```
 
+## 四、部分类定义 ##
 
+创建的类有许多成员时，代码文件比较长。这里可以采用前面介绍的给代码分组。在代码中定义区域，就可以折叠展开各个代码区，使代码易于阅读。
 
+```csharp
+public class MyClass
+{
+	#region Field
+	private int myInt;
+	#endregion
+
+	#region Constructor
+	public MyClass()
+	{
+		myInt = 99;
+	}
+	#endregion
+
+	#region Properties
+	public int MyInt
+	{
+		get
+		{
+			return myInt;
+		}
+		set
+		{
+			myInt = value;
+		}
+	}
+	#endregion
+
+	#region Methods
+	public void DoSomething()
+	{
+		//Do Something...
+	}
+	#endregion
+}
+```
+
+这段代码可以展开折叠类的字段、属性、构造函数和方法，以便集中精神考虑自己感兴趣的内容。但有时候，使用这样的技术代码依然难以理解。对此一个方法是使用部分类定义，partial class definition。简言之，就是使用部分类定义，把类的定义放在多个文件中。
+
+eg： 可以把字段、属性和构造函数放在一个文件中，而把方法放在另一个文件中。为此，只需要在每个包含部分类定义的文件中对类使用partial关键字即可，如下：
+
+```csharp
+public partial class MyClass
+{
+	...
+}
+```
+
+如果使用部分类定义，partial关键字就必须出现在包含定义部分的每个文件的与此相同的位置。
+
+应用于部分类的接口也会应用于整个类，下面的两个定义等价：
+
+```csharp
+public partial class MyClass : IMyInterface1
+{
+	...
+}
+
+public partial class MyClass : IMyInterface2
+{
+	...
+}
+```
+和
+```csharp
+public class MyClass : IMyInterface1, IMyInterface2
+{
+	...
+}
+```
+
+部分类定义可以在一个部分类定义文件或者多个部分类定义文件中包含基类。但如果基类在多个定义文件中指定，它就必须是同一个基类，因为在C#中，类只能继承一个基类。
 
