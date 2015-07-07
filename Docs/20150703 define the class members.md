@@ -668,3 +668,26 @@ public class MyClass : IMyInterface1, IMyInterface2
 
 部分类定义可以在一个部分类定义文件或者多个部分类定义文件中包含基类。但如果基类在多个定义文件中指定，它就必须是同一个基类，因为在C#中，类只能继承一个基类。
 
+
+## 五、部分方法定义 ##
+
+部分类也可以定义部分方法。部分方法在部分类中定义，但没有方法体，另一个部分类中包含实现代码。在这个两个部分类中，都要用partial关键字。
+
+```csharp
+public partial class MyClass
+{
+	partial void MyPartialMethod();
+}
+
+public partial class MyClass
+{
+	partial void MyPartialMethod()
+	{
+		//Method implementation
+	}
+}
+```
+
+部分方法也可以是静态的，但他们总是私有的，且不能有返回值。它们在使用的任何参数都不能是out参数，但可以是ref参数。部分方法也不能使用virtual、abstract、override、new、sealed、extern修饰符。
+
+与部分类一样，部分方法在定制自动生成代码或设计器创建代码时，都是很有用的。设计器会声明部分方法，用户根据具体情形选择是否实现它。如果不实现它，就不会影响性能，因为该方法在编译过的代码中不存在。
