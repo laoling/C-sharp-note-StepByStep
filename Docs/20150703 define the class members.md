@@ -691,3 +691,16 @@ public partial class MyClass
 部分方法也可以是静态的，但他们总是私有的，且不能有返回值。它们在使用的任何参数都不能是out参数，但可以是ref参数。部分方法也不能使用virtual、abstract、override、new、sealed、extern修饰符。
 
 与部分类一样，部分方法在定制自动生成代码或设计器创建代码时，都是很有用的。设计器会声明部分方法，用户根据具体情形选择是否实现它。如果不实现它，就不会影响性能，因为该方法在编译过的代码中不存在。
+
+
+## Q&A ##
+
+Q1、编写代码，定义一个基类MyClass，其中包含虚拟方法GetString()。这个方法应返回存储在受保护字段myString中的字符串，该字段可以通过只写公共属性ContainedString来访问。
+
+Q2、从类MyClass中派生一个类MyDerivedClass，重写GetString()方法，使用该方法的基类实现代码从基类中返回一个字符串，但在返回的字符串中添加文本“（output from derived class）”。
+
+Q3、部分方法定义必须使用void返回类型。说明其原因。
+
+Q4、编写一个类MyCopyableClass，该类可以使用方法GetCopy()返回它本身的一个副本。这个方法应使用派生于System.Object的MemberwiseClone()方法。给该类添加一个简单的属性，并且编写客户代码，客户代码使用该类检查任务是否成功执行。
+
+Q5、为Chapter10CardLib库编写一个控制台客户程序，从搅乱的Deck对象中一次取出5张牌。如果这5张牌都是相同的花色，客户程序就应在屏幕上显示这五张牌，以及文本“Flush！”，否则就显示52张牌以及文本“No flush”，并退出。
