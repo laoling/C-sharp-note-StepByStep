@@ -1,0 +1,5 @@
+d:\用户目录\我的文档\visual studio 2010\Projects\Chapter10CardLib\Chapter10CardLib\bin\Release\Chapter10CardLib.dll
+d:\用户目录\我的文档\visual studio 2010\Projects\Chapter10CardLib\Chapter10CardLib\bin\Release\Chapter10CardLib.pdb
+d:\用户目录\我的文档\visual studio 2010\Projects\Chapter10CardLib\Chapter10CardLib\obj\Release\Chapter10CardLib.dll
+d:\用户目录\我的文档\visual studio 2010\Projects\Chapter10CardLib\Chapter10CardLib\obj\Release\Chapter10CardLib.pdb
+d:\用户目录\我的文档\visual studio 2010\Projects\Chapter10CardLib\Chapter10CardLib\obj\Release\Chapter10CardLib.csprojResolveAssemblyReference.cache
