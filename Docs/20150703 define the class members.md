@@ -697,10 +697,147 @@ public partial class MyClass
 
 Q1、编写代码，定义一个基类MyClass，其中包含虚拟方法GetString()。这个方法应返回存储在受保护字段myString中的字符串，该字段可以通过只写公共属性ContainedString来访问。
 
+Answer:参见下面的代码
+
+```csharp
+class MyClass
+{
+	public string ContainedString
+	{
+		set
+		{
+			myString = value;
+		}
+	}
+
+	public virtual string GetString()
+	{
+		return myString;
+	}
+}
+```
+
 Q2、从类MyClass中派生一个类MyDerivedClass，重写GetString()方法，使用该方法的基类实现代码从基类中返回一个字符串，但在返回的字符串中添加文本“（output from derived class）”。
+
+Answer:参见下面的代码
+
+```csharp
+class MyDerivedClass : MyClass
+{
+	public override string GetString()
+	{
+		return base.GetString() + "(output from derived class)";
+	}
+}
+```
 
 Q3、部分方法定义必须使用void返回类型。说明其原因。
 
+Answer:部分方法定义与实现基本上都是分开的，给定义提供部分方法的实现代码时，编译器就需要执行这个方法，否则就忽略这个方法，在编译后代码中删除这个方法。
+
+要达到这个效果，使用void是最安全的办法，没有返回类型的方法不能作为表达式的一部分来调用，编译器就可以安全删除对部分方法调用的所有引用。
+
 Q4、编写一个类MyCopyableClass，该类可以使用方法GetCopy()返回它本身的一个副本。这个方法应使用派生于System.Object的MemberwiseClone()方法。给该类添加一个简单的属性，并且编写客户代码，客户代码使用该类检查任务是否成功执行。
 
+Answer:参见下面的代码
+
+```csharp
+class MyCopyableClass
+{
+	protected int myInt;
+	
+	public int ContainedInt
+	{
+		get
+		{
+			return myInt;
+		}
+		set
+		{
+			myInt = value;
+		}
+	}
+
+	public MyCopyableClass GetCopy()
+	{
+		return (MyCopyableClass)MemberwiseClone();
+	}
+}
+
+...
+class Program
+{
+	static void Main(string[] args)
+	{
+		MyCopyableClass obj1 = new MyCopyableClass();
+		obj1.ContainedInt = 5;
+		MyCopyableClass obj2 = obj1.GetCopy();
+		obj1.ContainedInt = 9;
+		Console.WriteLine(obj2.ContainedInt);
+		Console.ReadKey();
+	}
+}
+```
+客户代码运行显示5.
+
 Q5、为Chapter10CardLib库编写一个控制台客户程序，从搅乱的Deck对象中一次取出5张牌。如果这5张牌都是相同的花色，客户程序就应在屏幕上显示这五张牌，以及文本“Flush！”，否则就显示52张牌以及文本“No flush”，并退出。
+
+Answer：参见下面的代码
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Chapter10CardLib;
+
+namespace ExerciseAnswer
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Deck playDeck = new Deck();
+                playDeck.Shuffle();
+                bool isFlush = false;
+                int flushHandIndex = 0;
+                for (int hand = 0; hand < 10; hand++)
+                {
+                    isFlush = true;
+                    Suit flushSuit = playDeck.GetCard(hand * 5).suit;
+                    for (int card = 0; card < 5; card++)
+                    {
+                        if (playDeck.GetCard(hand * 5).suit != flushSuit)
+                        {
+                            isFlush = false;
+                        }
+                    }
+                    if (isFlush)
+                    {
+                        flushHandIndex = hand * 5;
+                        break;
+                    }
+
+                }
+
+                if (isFlush)
+                {
+                    Console.WriteLine("Flush!");
+                    for (int card = 0; card < 5; card++)
+                    {
+                        Console.WriteLine(playDeck.GetCard(flushHandIndex + card));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No flush.");
+                }
+                Console.ReadLine();
+            }
+        }
+    }
+}
+
+```
