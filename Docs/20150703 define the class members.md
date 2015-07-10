@@ -809,7 +809,7 @@ namespace ExerciseAnswer
                     Suit flushSuit = playDeck.GetCard(hand * 5).suit;
                     for (int card = 0; card < 5; card++)
                     {
-                        if (playDeck.GetCard(hand * 5).suit != flushSuit)
+                        if (playDeck.GetCard(hand * 5 + card).suit != flushSuit)
                         {
                             isFlush = false;
                         }
