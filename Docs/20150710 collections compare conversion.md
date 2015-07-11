@@ -4,6 +4,15 @@
 
 ## 一、集合 ##
 
+System.Collections命名空间中的几个接口提供了基本的集合功能：
+
+* IEnumerable可以迭代集合中的项。
+* ICollection（继承于IEnumerable）可以获取集合中的项的个数，并能把项复制到一个简单的数组类型中。
+* IList（继承于IEnumerable和ICollection）提供了集合的项列表，允许访问这些项，并提供其他的一些与项列表相关的基本功能。
+* IDictionary（继承于IEnumerable和ICollection）类似于IList，但提供了可通过键值（而不是索引）访问的项列表。
+
+System.Array实现了IEnumerable、ICollection、IList，但不支持IList的一些更高级的功能，它表示大小固定的项列表。
+
 #### 1、使用集合
 
 #### 2、定义集合
