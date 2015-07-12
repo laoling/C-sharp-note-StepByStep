@@ -17,6 +17,13 @@ System.Array实现了IEnumerable、ICollection、IList，但不支持IList的一
 
 #### 2、定义集合
 
+下面我们讨论如何创建自己的、强类型化的集合。
+
+一种方法是手动执行需要的方法。费时且难于实现。所有我们很少使用这种方法。
+
+第一种方法是从一个类中派生自己的集合，例如System.Collection.CollectionBase类，这个抽象类提供了很多集合类的实现方式。这就是推荐的方法。
+
+
 #### 3、索引符
 
 #### 4、关键字值集合和IDictionary
