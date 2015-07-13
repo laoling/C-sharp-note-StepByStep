@@ -15,14 +15,19 @@ System.Array实现了IEnumerable、ICollection、IList，但不支持IList的一
 
 #### 1、使用集合
 
+System.Collections命名空间中的类System.Collection.ArrayList也实现了IList、ICollection和IEnumerable接口，但实现方式比System.Array更复杂。数组的大小是固定的，而这个类可以用于表示大小可变的项列表。
+
 #### 2、定义集合
 
 下面我们讨论如何创建自己的、强类型化的集合。
 
 一种方法是手动执行需要的方法。费时且难于实现。所有我们很少使用这种方法。
 
-第一种方法是从一个类中派生自己的集合，例如System.Collection.CollectionBase类，这个抽象类提供了很多集合类的实现方式。这就是推荐的方法。
+另一种方法是从一个类中派生自己的集合，例如System.Collection.CollectionBase类，这个抽象类提供了很多集合类的实现方式。这就是推荐的方法。
 
+Collection.Base类有接口IEnumerable、ICollection和IList，但只提供了一些需要的实现代码，特别是IList的Clear()和RemoveAt()方法，以及ICollection的Count属性。如果要使用提供的功能，就需要自己执行其他代码。
+
+为便于完成任务，CollectionBase提供了两个受保护的属性，他们可以访问存储的对象本身。我们可以使用List和InnerList，List可以通过IList接口访问项，InnerList则是用于存储项的ArrayList对象。
 
 #### 3、索引符
 
