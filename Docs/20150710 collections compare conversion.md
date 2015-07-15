@@ -31,6 +31,44 @@ Collection.Base类有接口IEnumerable、ICollection和IList，但只提供了�
 
 #### 3、索引符
 
+索引符（indexer）是一种特殊类型的属性，可以把它添加到一个类中，以提供类似于数组的访问。实际上可以通过索引符提供更复杂的访问，因为我们可以使用方括号语法定义和使用复杂的参数类型。最常见的用法是对项执行简单的数字索引。
+
+在Animal对项的Animals集合中添加一个索引符，如下所示：
+
+```csharp
+public class Animals : CollectionBase
+{
+	...
+	public Animal this[int animalIndex]
+	{
+		get
+		{
+			return (Animal)List[animalIndex];
+		}
+		set
+		{
+			List[animalIndex] = value;
+		}
+	}
+}
+```
+
+this关键字与方括号中的参数一起使用，但这看起来类似于其他属性。这个语法是合理的，因为在访问索引符时，将使用对象名，后跟放在方括号中的索引参数（例如MyAnimals[0]）。
+
+这里对List属性使用一个索引符，这里需要进行显式数据转换，因为IList.List属性返回了一个System.Object对象。`return (Animal)List[animalIndex];`  注意，我们为这个索引符定义了一个类型。使用该索引符访问某项时，就可以得到这个类型。这种强类型化功能意味着，可以编写下面的代码：
+
+```csharp
+animalCollection[0].Feed();
+```
+
+而不是
+
+```csharp
+((Animal)animalCollection[0]).Feed();
+```
+
+这是强类型化的定制集合的另一个方便特性。
+
 #### 4、关键字值集合和IDictionary
 
 #### 5、迭代器
