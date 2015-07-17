@@ -69,9 +69,48 @@ animalCollection[0].Feed();
 
 这是强类型化的定制集合的另一个方便特性。
 
-今天暂时没有更新了，没有时间。抱歉，明天接着更。
-
 #### 4、关键字值集合和IDictionary
+
+除了IList接口外，集合还可以实现类似的IDictionary接口，允许项通过关键字值（如字符串名）进行索引，而不是通过一个索引。这也可以使用索引符来完成，但这次的索引符参数是与存储的项相关联的关键字，而不是int索引，这样集合就更便于用户使用了。
+
+与索引的集合一样，可以使用一个基类简化IDictionary接口的实现，这个基类就是DictionaryBase，它也实现IEnumerable和ICollection，提供了对任何集合都相同的基本集合处理功能。
+
+DictionaryBase 与 CollectionBase一样，实现通过其支持的接口获得的一些成员。DictionaryBase也实现Clear和Count成员，但不实现RemoveAt()。这是因为这是IList中的一个方法，不是IDictionary接口中的一个方法。但是，IDictionary有一个Remove()方法，这是一个应在基于DictionaryBase的定制集合类上实现的方法。
+
+下面是Animals类的另一个版本，这次派生于DictionaryBase。包括了Add()、Remove()和一个通过关键字访问的索引符的实现代码：
+
+```csharp
+public class Animals : DictionaryBase
+{
+	public void Add(string newID, Animal newAnimal)
+	{
+		Dictionary.Add(newID, newAnimal);
+	}
+	
+	public void Remove(string animalID)
+	{
+		Dictionary.Remove(animalID);
+	}
+
+	public Animals()
+	{
+	}
+
+	public Animal this[string animalID]
+	{
+		get
+		{
+			return (Animal)Dictionary[animalID];
+		}
+		set
+		{
+			Dictionary[animalID] = value;
+		}
+	}
+}
+```
+
+基于DictionaryBase的集合和基于CollectionBase的集合之间的另一个区别是foreach的工作方式略有区别。
 
 #### 5、迭代器
 
