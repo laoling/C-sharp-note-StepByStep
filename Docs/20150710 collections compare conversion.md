@@ -110,7 +110,22 @@ public class Animals : DictionaryBase
 }
 ```
 
-基于DictionaryBase的集合和基于CollectionBase的集合之间的另一个区别是foreach的工作方式略有区别。
+基于DictionaryBase的集合和基于CollectionBase的集合之间的另一个区别是foreach的工作方式略有区别。集合可以直接从集合中提取Animal对象。使用foreach和DictionaryBase派生类可以提供DictionaryEntry结构，这是在System.Collections命名空间中定义的一个类型。要得到Animal对象本身，就必须使用这个结构的Value成员，也可以使用结构的Key成员得到相关的关键字。要使代码等价于前面的代码：
+
+```csharp
+foreach (Animal myAnimal in animalCollection)
+{
+	Console.WriteLine("New {0} object added to custom collection Name = {1}",
+						myAnimal.ToString(), myAnimal.Name());
+}
+
+//变换
+foreach (DictionaryEntry myEntry in animalCollection)
+{
+	Console.WriteLine("New {0} object added to custom collection Name = {1}",
+						myEntry.Value.ToString(), ((Animal)myEntry.value).Name);
+}
+```
 
 #### 5、迭代器
 
