@@ -129,6 +129,22 @@ foreach (DictionaryEntry myEntry in animalCollection)
 
 #### 5、迭代器
 
+IEnumerable接口负责使用foreach循环，但重写foreach循环或实现方法并不容易。比如，在foreach循环中迭代集合collectionObject的过程如下：
+
+1）调用collectionObject.GetEnumerator(),返回一个IEnumerator引用。这个方法可以通过IEnumeratable接口的实现代码来获得，但这是可选的。 
+
+2）调用所返回的IEnumerator接口的MoveNext()方法。
+
+3）如果MoveNext()方法返回true，就使用IEnumerator接口的Current属性获取对象的一个引用，用于foreach循环。
+
+4）重复前面两步，直到MoveNext()方法返回false为止，此时循环停止。
+
+所以为了在类中进行这些操作，必须重写几个方法，跟踪索引，维护Current属性，以及执行其他一些操作。
+
+一个简单的替代方法是使用迭代器。使用迭代器可以有效地在后台生成许多代码，正确的完成所有任务。而且迭代器语法非常容易。
+
+迭代器的定义是，它是一个代码块，按顺序提供了要在foreach循环中使用的所有值。一般情况下，这个代码块是一个方法，也可以使用属性访问器或其他代码作为迭代器。简单起见，这里仅介绍方法。
+
 【迭代器和集合】
 
 #### 6、深赋值
