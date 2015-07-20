@@ -145,9 +145,47 @@ IEnumerable接口负责使用foreach循环，但重写foreach循环或实现方�
 
 迭代器的定义是，它是一个代码块，按顺序提供了要在foreach循环中使用的所有值。一般情况下，这个代码块是一个方法，也可以使用属性访问器或其他代码作为迭代器。简单起见，这里仅介绍方法。
 
+无论代码是什么，其返回类型都是有限制的。与期望正好相反，这个返回类型与所枚举的对象类型不同。例如在表示Animal对象集合的类中，迭代器块的返回类型不可能是Animal。两种可能的返回类型是前面提到的接口类型IEnumerable和IEnumerator。使用这两种类型的场合是：
+
++ 如果要迭代一个类，可使用方法GetEnumerator()，其返回类型是IEnumerator。
++ 如果要迭代一个类成员，例如一个方法，则使用IEnumerable。
+
+在迭代器块中，使用yield关键字选择要在foreach循环中使用的值。其语法如下：
+
+```csharp
+yield return value;
+```
+
+看下面简单例子：
+
+```csharp
+public static IEnumerable SimpleList()
+{
+	yield return "string 1";
+	yield return "string 2";
+	yield return "string 3";
+}
+
+public static void Main(string[] args)
+{
+	foreach (string item in SimpleList())
+		Console.WriteLine(item);
+
+	Console.ReadKey();
+}
+```
+
+显然这个迭代器不是特别有用，但它允许查看执行过程，了解实现代码有多简单。实际上代码返回了object类型的值，因为object是所有类型的基类，也就是说可以从yield语句返回任意类型。
+
+可以使用下面的语句中断信息返回foreach循环的过程：
+
+```csharp
+yield break;
+```
+
 【迭代器和集合】
 
-#### 6、深赋值
+#### 6、深复制
 
 ## 二、比较 ##
 
