@@ -185,7 +185,110 @@ yield break;
 
 【迭代器和集合】
 
+介绍迭代器如何用于迭代存储在字典类型的集合中的对象，无需处理DictionaryItem对象。下面是集合类Animals：
+
+```csharp
+public class Animals : DictionaryBase
+{
+	public void Add(string newID, Animal newAnimal)
+	{
+		Dictionary.Add(newID, newAnimal);
+	}
+
+	public void Remove(string animalID)
+	{
+		Dictionary.Remove(animalID);
+	}
+
+	public Animals()
+	{
+	}
+
+	public Animal this[string animalID]
+	{
+		get
+		{
+			return (Animal)Dictionary[animalID];
+		}
+		set
+		{
+			Dictionary[animalID] = value;
+		}
+	}
+}
+```
+
+可以在这段代码中添加如下简单的迭代器，以便执行预期的操作：
+
+```csharp
+//Animals.cs
+public new IEnumerator GetEnumerator()
+{
+	foreach (object animal in Dictionary.Values)
+		yield return (Animal)animal;
+}
+```
+
+现在可以使用下面的代码迭代集合中的Animal对象了：
+
+```csharp
+//Program.cs
+foreach (Animal myAnimal in animalCollection)
+{
+	Console.WriteLine("New {0} object added to custom collection, " + 
+					  "Name = {1}", myAnimal.ToString(), myAnimal.Name);
+}
+```
+
 #### 6、深复制
+
+前面介绍了使用受保护的方法System.Object.MemberwiseClone()进行浅复制。但通过引用类型的多次引用后，会造成克隆结果的改变。要解决这个问题，就需要执行深复制。
+
+深复制在.NET Framework的标准方式：实现ICloneable接口，该接口有一个方法Clone();这个方法不带参数，返回一个object类型的结果，其签名和原来使用的GetCopy()方法相同。
+
+eg：使用深复制的代码：
+
+```csharp
+public class Content
+{
+	public int Val;
+}
+
+public Content MyContent = new Content();
+
+public Cloner(int newVal)
+{
+	MyContent.Val = newVal;
+}
+
+public object Clone()
+{
+	Cloner clonedCloner = new Cloner(MyContent.Val);
+	return clonedCloner;
+}
+```
+
+其中使用包含在源Cloner对象中的Content对象（MyContent）的Val字段，创建一个新Cloner对象。这个字段是一个值类型，所以不需要深复制。
+
+注意：在比较复杂的对象系统中，调用Clone()是一个递归过程。例如，如果对象Cloner类的MyContent字段也需要深复制，就要像下面这样使用：
+
+```csharp
+public class Cloner : ICloneable
+{
+	public Content MyContent = new Content();
+
+	...
+
+	public object Clone()
+	{
+		Cloner clonedCloner = new Cloner();
+		clonedCloner.MyContent = MyContent.Clone();
+		return ClonedCloner;
+	}
+}
+```
+
+这里调用了默认的构造函数，以便简化创建一个新Cloner对象的语法。为了使这段代码能正常工作，还需要在Content类上实现ICloneable接口。
 
 ## 二、比较 ##
 
