@@ -6,8 +6,25 @@ using System.Text;
 
 namespace Chapter11CardLib
 {
-    public class Deck
+    /// <summary>
+    /// Deck类上实现ICloneable接口
+    /// bug：Deck类无法修改它包含的扑克牌，所以无法洗牌
+    /// fix：为Deck类定义一个新的私有构造函数，在实例化Deck对象时，可以传递指定的Cards集合
+    /// </summary>
+
+    public class Deck : ICloneable
     {
+        public object Clone()
+        {
+            Deck newDeck = new Deck(cards.Clone() as Cards);
+            return newDeck;
+        }
+
+        private Deck(Cards newCards)
+        {
+            cards = newCards;
+        }
+
         private Cards cards = new Cards();
 
         public Deck()
@@ -51,5 +68,10 @@ namespace Chapter11CardLib
                 newDeck.CopyTo(cards);
             }
 
-        }
+
+            //public object Clone()
+            //{
+            //     throw new NotImplementedException();
+            //}
+    }
 }

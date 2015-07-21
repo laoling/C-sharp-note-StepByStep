@@ -22,6 +22,16 @@ namespace Chapter11CardClient
                 else
                     Console.WriteLine();
             }
+
+            //添加一个客户端测试
+            Deck deck1 = new Deck();
+            Deck deck2 = (Deck)deck1.Clone();
+            Console.WriteLine("The first card in the original deck is : {0}", deck1.GetCard(0));
+            Console.WriteLine("The first card in the cloned deck is : {0}", deck2.GetCard(0));
+            deck1.Shuffle();
+            Console.WriteLine("Original deck shuffled.");
+            Console.WriteLine("The first card in the original deck is : {0}", deck1.GetCard(0));
+            Console.WriteLine("The first card in the cloned deck is : {0}", deck2.GetCard(0));
             Console.ReadKey();
         }
     }

@@ -2,3 +2,7 @@ C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter11CardLib\bin\Rel
 C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter11CardLib\bin\Release\Chapter11CardLib.pdb
 C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter11CardLib\obj\Release\Chapter11CardLib.dll
 C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter11CardLib\obj\Release\Chapter11CardLib.pdb
+D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\obj\Release\Chapter11CardLib.dll
+D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\obj\Release\Chapter11CardLib.pdb
+D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\bin\Release\Chapter11CardLib.dll
+D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\bin\Release\Chapter11CardLib.pdb

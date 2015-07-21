@@ -6,8 +6,23 @@ using System.Text;
 
 namespace Chapter11CardLib
 {
-    public class Cards : CollectionBase
+    /// <summary>
+    /// 对Cards集合类实现ICloneable接口
+    /// 由于涉及到复制源集合中的每个Card对象，需要进行深复制
+    /// </summary>
+    
+    public class Cards : CollectionBase, ICloneable
     {
+        public object Clone()
+        {
+            Cards newCards = new Cards();
+            foreach (Card sourceCard in List)
+            {
+                newCards.Add(sourceCard.Clone() as Card);
+            }
+            return newCards;
+        }
+
         public void Add(Card newCard)
         {
             List.Add(newCard);
