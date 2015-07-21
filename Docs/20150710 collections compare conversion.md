@@ -292,7 +292,22 @@ public class Cloner : ICloneable
 
 ## 二、比较 ##
 
+在C#编程中，把对象传给方法时，下一步要进行的操作常常取决于对象的类型。
+
 #### 1、类型比较
+
+在比较对象时，常常需要了解它们的类型，才能确定是否可以进行值的比较。第九章GetType()方法，所有的类都从System.Object中继承了这个方法，这个方法和typeof()运算符一起使用，就可以确定对象的类型：
+
+```csharp
+if (myObj.GetType() == typeof(MyComplexClass))
+{
+	// myObj is an instance of the class MyComplexClass.
+}
+```
+
+前面还提到ToString()的默认实现方式，ToString()也是从System.Object继承来的，该方法可以提供对象类型的字符串表示。也可以比较这些字符串，但这是比较杂乱的方式。
+
+本节将介绍一种比较值的简便方式：is运算符。它可以提供可读性比较高的代码，还可以检查基类，在介绍is运算符之前，需要了解处理值类型时后台的一些常见操作：封箱和拆箱（boxing and unboxing）。
 
 ###### 1）封箱和拆箱
 
