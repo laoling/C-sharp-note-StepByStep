@@ -311,6 +311,87 @@ if (myObj.GetType() == typeof(MyComplexClass))
 
 ###### 1）封箱和拆箱
 
+封箱(boxing)是把值类型转换为System.Object类型，或者转换为由值类型实现的接口类型。拆箱(unboxing)是相反的转换过程。
+
+eg：下面的结构类型
+
+```csharp
+struct MyStruct
+{
+	public int Val;
+}
+```
+
+可以把这种类型的结构放在object类型的变量中，以封箱它：
+
+```csharp
+MyStruct valType1 = new MyStruct();
+valType1.Val = 5;
+object refType = valType1;
+```
+
+其中创建了一个类型为MyStruct的新变量，并把一个值赋予这个结构的Val成员，然后把它封箱在object类型的变量中。
+
+以这种方式封箱变量而创建的对象，包含值类型变量的一个副本的引用，而不包含源值类型变量的引用。要进行验证，可以修改源结构的内容，把对象中包含的结构拆箱到新变量中，检查其内容：
+
+```csharp
+valType1.Val = 6;
+MyStruct ValType2 = (MyStruct)refType;
+Console.WriteLine("ValType2.Val = {0}", valType2.Val);
+```
+
+执行这段代码将得到如下输出结果：
+
+> valType2.Val = 5
+
+但在把一个引用类型赋予对象时，将执行不同的操作。把MyStrut改为一个类（不考虑类名不合适的情况），即可看到这种情形：
+
+```csharp
+class MyStruct
+{
+	public int Val;
+}
+```
+
+再次忽略名称错误的变量，就会得到下面结果：
+
+> ValType2.Val = 6;
+
+也可以把值类型封箱到一个接口类型中，只要它们实现这个接口即可。例如，假定MyStrut类型实现IMyInterface接口，如下所示：
+
+```csharp
+interface IMyInterface
+{
+}
+
+struct MyStruct : IMyInterface
+{
+	public int Val;
+}
+```
+
+接着把结构封箱到一个IMyInterface类型中，如下：
+
+```csharp
+MyStruct valType1 = new MyStruct();
+IMyInterface refType = valType1;
+```
+
+然后使用一般的数据类型转换语法拆箱它：
+
+```csharp
+MyStruct ValType2 = (MyStruct)refType;
+```
+
+从这些示例可以看出封箱是在没有用户干涉的情况下进行的（即不需要编写任何代码），但拆箱一个值需要进行显式转换，即需要进行数据类型转换（封箱是隐式的，所以不需要进行数据类型转换）。
+
+封箱有用的原因有二：
+
+* 它允许在项的类型是object的集合中使用值类型，如ArrayList。
+* 有一个内部机制允许在值类型上调用object，例如int和结构。
+
+最后注意：在访问值类型内容前，必须进行拆箱。
+
 ###### 2）is运算符
 
 #### 2、值比较
