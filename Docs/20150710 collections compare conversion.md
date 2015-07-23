@@ -410,7 +410,150 @@ is运算符的语法如下：
 
 #### 2、值比较
 
+考虑两个表示人的Person对象，它们都有一个Age整型属性。下面要比较它们，看看哪个人年龄较大。为此可以使用一下代码：`if (person1.Age > person2.Age){...}`这是可以的，还有其他方法，例如，使用下面的语法：`if (person1 > person2){...}`。可以使用运算符重载，这是一个强大的技术，但使用需慎重。因为这段代码中年龄的比较并不是很明显，该代码还可以比较身高、体重、IQ等。
+
+另一个方法是使用IComparable和IComparer接口，它们可以用标准的方式定义比较对象的过程。这是由.NET Framework中各种集合类提供的方式，是对集合中的对象进行排序的一种绝佳方式。
+
 ###### 1）运算符重载
+
+运算符重载（operator overloading）可以对我们设计的类使用标准的运算符，例如+、>等。这称为重载。因为在使用特定的参数类型时，我们为这些运算符提供了自己的实现代码，其方式与重载方法相同，也是为同名的方法提供不同的参数。运算符重载非常有用，因为我们可以在运算符重载的实现中执行需要的任何操作。
+
+我们先看运算符重载的基本语法。要重载运算符，可给类添加运算符类型成员（它们必须是static）。一些运算符有多种用途，因此我们还指定了要处理多少个操作数，以及这些操作数的类型。一般情况下，操作数的类型与定义运算符的类相同，但也可以定义处理混合类型的运算符。
+
+eg：考虑一个简单类型AddClass1，如下
+
+```csharp
+public class AddClass1
+{
+	public int val;
+}
+```
+
+这仅是int值的一个包装器（wrapper），但可以用于说明原理。对于这个类，下面的代码不能编译：
+
+```csharp
+AddClass1 op1 = new AddClass1();
+op1.val = 5;
+AddClass1 op2 = new AddClass1();
+op2.val = 5;
+AddClass1 op3 = op1 + op2;
+```
+
+其错误是 + 运算符不能应用于AddClass1类型的操作数，因为我们尚未定义要执行的操作。下面的代码则可执行，但得不到预期的效果：
+
+```csharp
+AddClass1 op1 = new AddClass1();
+op1.val = 5;
+AddClass1 op2 = new AddClass1();
+op2.val = 5;
+bool op3 = op1 == op2;
+```
+
+其中使用二元运算符来比较op1和op2，看他们是否引用的同一对象，而不是验证它们的值是否相等。
+
+要重载 + 运算符，可使用下述代码：
+
+```csharp
+public class AddClass1
+{
+	public int val;
+
+	public static AddClass1 operator +(AddClass1 op1, AddClass1 op2)
+	{
+		AddClass1 returnVal = new AddClass1();
+		returnVal.val = op1.val + op2.val;
+		return returnVal;
+	}
+}
+```
+
+可以看出运算符重载看起来与标准静态方法声明类似，但它们使用关键字operator和运算符本身，而不是一个方法名。现在可以成功地使用+运算符和这个类，如上面的实例所示：
+
+```csharp
+AddClass1 op3 = op1 + op2;
+```
+
+重载所有二元运算符都一样，一元运算符看起来也类似，但只有一个参数：
+
+```csharp
+public class AddClass1
+{
+	public int val;
+
+	public static AddClass1 operator +(AddClass1 op1, AddClass1 op2)
+	{
+		AddClass1 returnVal = new AddClass1();
+		returnVal.val = op1.val + op2.val;
+		return returnVal;
+	}
+
+	public static AddClass1 operator -(AddClass1 op1)
+	{
+		AddClass1 returnVal = new AddClass1();
+		returnVal.val = -op1.val;
+		return returnVal;
+	}
+```
+
+这两个运算符处理的操作数的类型与类相同，返回值也是该类型，但考虑下面的类定义：
+
+```csharp
+public class AddClass1
+{
+	public int val;
+
+	public static AddClass1 operator +(AddClass1 op1, AddClass1 op2)
+	{
+		AddClass1 returnVal = new AddClass1();
+		returnVal.val = op1.val + op2.val;
+		return returnVal;
+	}
+
+	public class AddClass2
+	{
+		public int val;
+	}
+
+	public class AddClass3
+	{
+		public int val;
+	}
+```
+
+下面的代码就可以执行：
+
+```csharp
+AddClass1 op1 = new AddClass1();
+op1.val = 5;
+AddClass2 op2 = new AddClass1();
+op2.val = 5;
+AddClass3 op3 = op1 + op2;
+```
+
+这种混合类型使用时可以考虑。但要注意如果把相同的运算符加到AddClass2中，上面的代码就会失败，因为它弄不清要使用哪个运算符。因此，应注意不要把签名相同的运算符添加到多个类中。
+
+还要注意如果混合了类型，操作数的顺序必须与运算符重载的参数顺序相同。如果使用了重载的运算符和顺序错误的操作数，操作就会失败。所以不能像下面这样使用运算符：
+
+```csharp
+AddClass3 op3 = op2 + op1;
+```
+
+当然除非提供了另一个重载运算符和倒序的参数：
+
+```csharp
+public static AddClass3 operator +(AddClass2 op1, AddClass1 op2)
+{
+	AddClass3 returnVal = new AddClass3();
+	returnVal.val = op1.val + op2.val;
+	return returnVal;
+}
+```
+
+可以重载的运算符：
+
+* 一元运算符： + - ! ~ ++ -- true false
+* 二元运算符： + - * / % & | ^ << >>
+* 比较运算符： == != < > <= >=
 
 ###### 2）IComparable和IComparer接口
 
