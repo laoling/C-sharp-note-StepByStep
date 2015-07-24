@@ -557,6 +557,52 @@ public static AddClass3 operator +(AddClass2 op1, AddClass1 op2)
 
 ###### 2）IComparable和IComparer接口
 
+IComparable和IComparer接口是.NET Framework中比较对象的标准方式。这两个接口之间的差别如下：
+
++ IComparable在要比较的对象的类中实现，可以比较该对象和另一个对象。
++ IComparer在一个单独的类中实现，可以比较任意两个对象。
+
+一般使用IComparable给出类的默认比较代码，使用其他类给出非默认的比较代码。
+
+IComparable提供了一个方法CompareTo()，这个方法接受一个对象。
+
+eg：实现可以为实现方法传送一个Person对象，以便确定这个人是否比当前的人更年老还是更年轻。实际上这个方法返回一个int，所以也可以确定第二个人与当前的人的年龄差：
+
+```csharp
+if (person1.CompareTo(person2) == 0)
+{
+	Console.WriteLine("Same age.");
+}
+else if (person1.CompareTo(person2) > 0)
+{
+	Console.WriteLine("Person 1 is Older.");
+}
+else
+{
+	Console.WriteLine("Person 1 is Younger.");
+}
+```
+
+IComparer也提供了一个方法Compare()，这个方法接受两个对象，返回一个整型结果。这与CompareTo()相同。对于支持IComparer对象，可以使用下面的代码：
+
+```csharp
+if (personComparer.Compare(person1, person2) == 0)
+{
+	Console.WriteLine("Same age.");
+}
+else if (personComparer.Compare(person1, person2) > 0)
+{
+	Console.WriteLine("Person 1 is Older.");
+}
+else
+{
+	Console.WriteLine("Person 1 is Younger.");
+}
+```
+
+这两种情况下，提供给方法的参数时System.Object类型。也就是说，可以比较其他任意类型的两个对象。所以在返回结果之前，通常需要进行某种类型比较，如果使用了错误的类型，还会抛出异常。
+
+
 ###### 3）使用IComparable和IComparer接口对集合排序
 
 ## 三、转换 ##
