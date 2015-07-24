@@ -6,3 +6,4 @@ D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\o
 D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\obj\Release\Chapter11CardLib.pdb
 D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\bin\Release\Chapter11CardLib.dll
 D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\bin\Release\Chapter11CardLib.pdb
+D:\gitspace\C-sharp-note-StepByStep\Projects\Chapter11CardLib\Chapter11CardLib\obj\Release\Chapter11CardLib.csprojResolveAssemblyReference.cache
