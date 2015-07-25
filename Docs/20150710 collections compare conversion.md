@@ -644,10 +644,143 @@ Console.WriteLine("Comparing '{0}' and '{1}',result: {2}", firstNumber, secondNu
 
 ## 三、转换 ##
 
+到目前为止，都是使用的类型转换。但这并不是唯一的方式。采用隐式或显式的方式还可以定义所创建的类转换为其他类。首先我们介绍重载方式。还会介绍另一个有用的运算符：as运算符。它一般适用于引用类型的转换。
+
 #### 1、重载转换运算符
+
+除了重载数学运算符之外，还可以定义类型之间的隐式和显式转换。如果要在不相关的类型之间转换，这是必须的，例如，如果在类型之间没有继承关系，也没有共享接口，这就是必须的。
+
+下面定义CanvClass1和CanvClass2之间的隐式转换，即编写下面的代码：
+
+```csharp
+ConvClass1 op1 = new ConvClass1();
+ConvClass2 op2 = op1;
+```
+
+另外还可以定义一个显式转换：
+
+```csharp
+ConvClass1 op1 = new ConvClass1();
+ConvClass2 op2 = (ConvClass2)op2;
+```
+
+eg:考虑下面的代码
+
+```csharp
+public class ConvClass1
+{
+	public int val;
+
+	public static implicit operator ConvClass2(ConvClass1 op1)
+	{
+		ConvClass2 returnVal = new ConvClass2();
+		returnVal.Val = op1.val;
+		return returnVal;
+	}
+}
+
+public class ConvClass2
+{
+	public double val;
+
+	public static explicit operator ConvClass1(ConvClass2 op2)
+	{
+		ConvClass1 returnVal = new ConvClass1();
+		checked {returnVal.val = (int)op1.val;};
+		return returnVal;
+	}
+}
+```
+
+其中ConvClass1包含一个int值，ConvClass2包含一个double值。int值可以隐式转换为double值，所以可以在ConvClass1和ConvClass2之间定义一个隐式转换。但反过来就不行了，应把ConvClass2和ConvClass1之间的转换定义为显式转换。
+
+在代码中用关键字implicit和explicit来指定这些转换，如上所示。对于这些类，下面的代码就很好：
+
+```csharp
+ConvClass1 op1 = new ConvClass1();
+op1.val = 3;
+ConvClass2 op2 = op1;
+```
+
+但反向的转换需要进行下述显式数据类型转换：
+
+```csharp
+ConvClass2 op1 = new ConvClass2();
+op1.val = 3e15;
+ConvClass1 op2 = (ConvClass1)op1;
+```
+
+如果在显式转换中使用了checked关键字，则上述代码将产生一个异常，因为op1的val属性值太大，不能放在op2的val属性中。
 
 #### 2、as运算符
 
+as运算符使用下面的语法，把一种类型转换为指定的引用类型：
 
+```csharp
+<operand> as <type>
+```
 
+这只适用于下列情况：
 
++ <operand>的类型是<type>类型；
++ <operand>可以隐式转换为<type>类型；
++ <operand>可以封箱到<type>类型。
+
+如果不能从<operand>转换为<type>，则表达式的结果就是null。
+
+基类到派生类的转换可以使用显式转换来进行，但这并不总是有效的。考虑前面示例中ClassA和ClassD，其中ClassD派生于ClassA：
+
+```csharp
+class ClassA : IMyInterface
+{
+}
+
+class ClassD : ClassA
+{
+}
+```
+
+下面的代码使用as运算符把obj1中存储的ClassA实例转换为ClassD类型：
+
+```csharp
+ClassA obj1 = new ClassA();
+ClassD obj2 = obj1 as ClassD;
+```
+
+则obj2的结果为null。
+
+还可以使用多态性把ClassD实例存储在ClassA类型的变量中。下面代码演示了这一点，ClassA类型的变量包含ClassD类型的变量包含ClassD类型的实例，使用as运算符把ClassA类型的变量转换为ClassD类型。
+
+```csharp
+ClassD obj1 = new ClassD();
+ClassA obj2 = obj1;
+ClassD obj3 = obj2 as ClassD;
+```
+
+这次obj3最后包含与obj1相同的对象引用，而不是null。
+
+因此as运算符非常有用，因为下面使用简单类型转换的代码会抛出一个异常：
+
+```csharp
+ClassA obj1 = new ClassA();
+ClassD obj2 = (ClassD)obj1;
+```
+
+与此代码等价的as代码会把null值赋给obj2，不会抛出异常。这表示下面的代码在C#中非常常见：
+
+```csharp
+public void MilkCow(Animal myAnimal)
+{
+	Cow myCow = myAnimal as Cow;
+	if (myCow != null)
+	{
+		myCow.Milk();
+	}
+	else
+	{
+		Console.WriteLine("{0} isn't a cow, so can't be milked.", myAnimal.Name);
+	}
+}
+```
+
+这要比检查异常简单的多。
