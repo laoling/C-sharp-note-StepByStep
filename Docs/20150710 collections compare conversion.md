@@ -602,8 +602,45 @@ else
 
 这两种情况下，提供给方法的参数时System.Object类型。也就是说，可以比较其他任意类型的两个对象。所以在返回结果之前，通常需要进行某种类型比较，如果使用了错误的类型，还会抛出异常。
 
+.NET Framework在类Comparer上提供了IComparer接口的默认实现方式，类Comparer位于System.Collections命名空间中，可以对简单类型以及支持IComparable接口的任意类型进行特定文化的比较。
+
+eg：可以用下面的代码使用
+
+```csharp
+string firstString = "First String";
+string secondString = "Second String";
+Console.WriteLine("Comparing '{0}' and '{1}', result: {2}", firstString, secondString,
+                   Comparer.Default.Compare(firstString, secondString));
+
+int firstNumber = 35;
+int secondNumber = 23;
+Console.WriteLine("Comparing '{0}' and '{1}',result: {2}", firstNumber, secondNumber, 
+                   Comparer.Default.Compare(firstNumber, secondNumber));
+```
+
+这里使用Comparer.Default静态成员获取Comparer类的一个实例，接着使用Compare()方法比较前两个字符串，之后比较两个整数，结果如下：
+
+> Comparing 'First String' and 'Second String', result: -1
+> Comparing '35' and '23', result: 1
+
+在字母表中，F在S前，所以F小于S，第一个结果是-1；同样的，35大于23，第二个结果是1。这里给出的结果并未给出相差的幅度。
+
+在使用Comparer时，必须使用可以比较的类型。例如，试图比较firstString和firstNumber就会出现一个异常。
+
+下面是有关这个类的一些注意事项：
+
++ 检查传送给Comparer.Compare()的对象，看看它们是否支持IComparable。如果支持，就使用该实现代码。
++ 允许使用null值，它表示“小于”其他对象。
++ 字符串根据当前文化来处理。要根据不同的语言处理字符串，Comparer类必须使用其构造函数进行实例化，以便传送指定所使用的文化的System.Globalization.CultureInfo对象。
++ 字符串在处理时要区分大小写。如果要以不区分大小写的方式来处理他们，就需要使用CaseInsensitiveComparer类，该类以相同的方式工作。
 
 ###### 3）使用IComparable和IComparer接口对集合排序
+
+许多集合类可以使用对象的默认比较方式进行排序，或者用定制方法来排序。ArrayList就是一个示例，它包含方法Sort()，这个方法使用时可以不带参数，此时使用默认的比较方式，也可以给它传送IComparer接口，以比较对象对。
+
+在给ArrayList填充了简单类型时，例如整数或字符串，就会进行默认的比较。对于自己的类，必须在类定义中实现IComparable，或者创建一个支持IComparer的类，来进行比较。
+
+注意：System.Collection命名空间中的一些类，包括CollectionBase，都没有提供排序方法。如果要对派生于这个类的集合排序，就必须多做一些工作，自己给内部的List集合排序。
 
 ## 三、转换 ##
 
