@@ -1,0 +1,4 @@
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter13CardLib\bin\Release\Chapter13CardLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter13CardLib\bin\Release\Chapter13CardLib.pdb
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter13CardLib\obj\Release\Chapter13CardLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter13CardLib\obj\Release\Chapter13CardLib.pdb
