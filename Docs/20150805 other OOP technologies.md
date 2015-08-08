@@ -123,9 +123,80 @@ namespace MyRootNamespace
 
 ##### 3.3.1 多用途的事件处理程序
 
+前面Timer.Elapsed事件的委托包含了事件处理程序中常见的两类参数，如下所示：
+
+* object source —— 引发事件的对象的引用
+* ElapsedEventArgs e —— 由事件传递的参数
+
+在这个事件（以及许多其他的事件）中使用Object类型参数的原因是，我们常常要为由不同对象引发的几个相同事件使用同一个事件处理程序，但仍要指定哪个对象生成了事件。
+
+为了说明这点，我们写一个例子，见Chapter13Example03.
+
 ##### 3.3.2 EventHandle和泛型EventHandler<T>类型
+
+大多数情况下，都应遵循上一节提出的模式，使用返回类型为void、带两个参数的事件处理程序。第一个参数的类型是object，是事件源。第二个参数的类型派生于System.EventArgs，包含任意事件变元。这非常常见，所以.NET提供了两个委托类型`EventHandler`和`EventHandler<T>`，以便于定义事件。它们都是委托，使用标准的事件处理模式。泛型版本允许指定要使用的事件变元的类型。
+
+所以，在前面的示例中，可以不定义自己的MessageHandler泛型类型，而是定义MessageArrived事件，如下所示：
+
+```csharp
+public class Connection
+{
+	public event EventHandler MessageArrived;
+
+	...
+}
+```
+
+或者
+
+```csharp
+public class Connection
+{
+	public event EventHandler<MessageArrivedEventArgs> MessageArrived;
+
+	...
+}
+```
+
+这显然是好事，因为代码被简化了。
 
 ##### 3.3.3 返回值和事件处理程序
 
+前面的所有事件处理程序都使用void类型的返回值。可以为事件提供返回类型，但这会出问题。这是因为引发给定的事件，可能会调用好几个事件处理程序。如果这些处理程序都返回一个值，那么我们该使用哪个返回值？
+
+系统处理这个问题的方式是，只允许访问由事件处理程序最后返回的那个值，也就是最后一个订阅该事件的处理程序返回的值。这个功能在某些情况下是有用的，但最好使用void类型的事件处理程序，且避免使用out类型的参数。使用out类型的参数，参数返回值的源头就是不清楚的。
+
 ##### 3.3.4 匿名方法
 
+除了定义事件处理方法之外，还可以使用匿名方法(anonymous method)。匿名方法实际上并非传统意义上的方法，它不是某个类上的方法，而纯粹是为用作委托目的而创建的。
+
+要创建匿名方法，需要使用下面的代码：
+
+```csharp
+delegate(parameters)
+{
+	// Anonymous method code.
+};
+```
+
+其中parameters是一个参数列表，这些参数匹配正在实例化的委托类型，由匿名方法的代码使用，例如：
+
+```csharp
+delegate(Connection source, MessageArrivedEventArgs e)
+{
+	// Anonymous method code matching MessageHandler event.
+};
+```
+
+使用这段代码可以完全绕过例子中的DisplayMessage()方法：
+
+```csharp
+myConnection1.MessageArrived += 
+	delegate(Connection source, MesssageArrivedEventArgs e)
+	{
+		Console.WriteLine("Message arrived from: {0}", source.Name);
+		Console.WriteLine("Message Text: {0}", e.Message);
+	};
+```
+
+对于匿名方法要注意，对于包含它们的代码块来说，它们是局部的，可以访问这个区域内的局部变量。如果使用这样一个变量，它就成为外部变量(outer variable)。外部变量在超出作用域时，是不会删除的，这与其他局部变量不同，在使用它们的匿名方法被销毁时，外部变量才会删除。这比我们希望的时间晚一些，所以要格外小心。如果外部变量占用了大量内存，或者使用的资源在其他方面是比较昂贵的，极可能导致内存或性能问题。
