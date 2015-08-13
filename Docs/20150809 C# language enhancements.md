@@ -302,15 +302,135 @@ var curry = new
 
 #### 4.1 dynamic类型
 
+C#中引入了dynamic关键字，以用于定义变量。例如：
+
+```csharp
+dynaminc myDynamicVar;
+```
+
+与前面介绍的var关键字不同，的确存在dynamic类型，所以在声明myDynamicVar时，无需直接初始化它的值。
+
+>dynamic类型不同寻常之处，在于它仅在编译期间存在，在运行期间它会被System.Object类型替代。这是比较细微的实现细节，但必须记住这一点，后面会用它澄清些讨论。一旦有了动态变量，就可以继续访问其成员（这里没有列出实际获取变量值的代码）。
+
+```csharp
+myDynamicVar.DoSomething("With this!");
+```
+
+无论myDynamicVar实际上包含什么值，这行代码都会编译。但是如果所请求的成员不存在，在执行这行代码时就会产生一个RuntimeBinderException类型的异常。
+
 #### 4.2 IDnyamicMetaObjectProvider
+
+在继续之前，应注意如何使用动态类型，或者更确切地讲，在运行期间对成员访问应用某种技术时会发生什么。实际上，有三种不同的方式访问成员：
+
++ 如果动态值是COM对象，就使用COM技术访问成员（通过IUnknown接口，但这里不需要了解它）。
++ 如果动态值支持IDnyamicMetaObjectProvider接口，就使用该接口访问类型成员。
++ 如果不能使用上述两种技术，就使用反射。
+
+第二种情形比较有趣，它涉及到IDnyamicMetaObjectProvider接口。这里不详细讨论细节，只是注意可以实现这个接口，来准确地控制在运行期间访问成员时会发生什么。
 
 ## 五、高级方法参数 ##
 
+C#4扩展了定义和使用方法参数的方式。这主要是为了响应使用外部定义的接口时出现的一个特殊问题，例如Microsoft Office编程模型。其中一些方法有大量的参数，许多参数并不是每次调用都需要的。过去这意味着需要一种方式指定缺失的参数，否则在代码中会出现许多空值：
+
+```csharp
+RemoteCall(var1, var2, null, null, null, null, null);
+```
+
+也许在理想情况下，这个RemoteCall()方法有多个重载版本，其中一个重载版本需要两个参数：
+
+
+```csharp
+RemoteCall(var1, var2);
+```
+
+但是这需要更多带其他参数组合的方法，这本身就会带来更多问题。要维护更多的代码就增加了代码的复杂性等。
+
+VB等语言以另一种方式处理这种情况，即允许使用命名参数和可选参数。在C#4版本中也允许这样做，这是所有.NET语言演化趋于一致的一种方式。
+
+下面介绍这些新的参数类型。
+
 #### 5.1 可选参数
+
+调用方法时，常常给某个参数传送相同的值。例如这可能是一个布尔值，以控制方法操作中的不重要部分。具体而言，考虑下面的方法定义：
+
+```csharp
+public List<string> GetWords(string sentence, bool capitalizeWords)
+{
+	...
+}
+```
+
+无论给capitalizeWords参数传送什么值，这个方法都会返回一系列string值，每个string值都是输入句子中的一个单词。根据这个方法的使用方式，可能需要把返回的单词列表转换为大写（也许要格式化一个标题）。但在大多数情况下，并不需要这么做，所以大多数调用如下：
+
+```csharp
+List<string> words = GetWords(sentence, false);
+```
+
+为了把这种方式变成默认方式，可以声明第二个方法，如下：
+
+```csharp
+public List<string> GetWords(string sentence)
+{
+	return GetWords(sentence, false);
+}
+```
+
+这个方法调用第二个方法，并给capitalizeWords传送值false。
+
+这种方式没有任何错误，但可以想象在使用更多的参数时，这种方式会变得非常复杂。
+
+另一种方式是把capitalizeWords参数变成可选参数。这需要在方法定义中将参数定义为可选参数，这需要提供一个默认值，如果没有提供值，就使用默认值，如下所示：
+
+```csharp
+public List<string> GetWords(string sentence, bool capitalizeWords = false)
+{
+	...
+}
+```
+
+如果以这种方式定义方法，就能提供一个或两个参数，只有希望capitalizeWords是true时，才需要第二个参数。
 
 ###### 5.1.1 可选参数的值
 
+以上方法定义了一个可选参数，其语法如下所示：
+
+```csharp
+<parameterType> <parameterName> = <defaultValue>
+```
+
+给`<defaultValue>`用作默认值的内容有些限制：默认值必须是字面值、常量值、新对象实例或者默认值类型值。因此不会编译下面的代码：
+
+```csharp
+public bool CapitalizationDefault;
+
+public List<string> GetWords(string sentence, bool capitalizeWords = CapitalizationDefault)
+{
+	...
+}
+```
+
+为了使上述代码可以工作，CapitalizationDefault值必须定义为常量：
+
+```csharp
+public bool CapitalizationDefault = false;
+```
+
+这是否有意义取决于具体的情形，在大多数情况下，最好提供一个字面值。
+
 ###### 5.1.2 可选参数的顺序
+
+使用可选值时，它们必须位于方法的参数列表末尾。没有默认值的参数不能放在有默认值参数的后面。
+
+因此下面的代码是非法的：
+
+```csharp
+public List<string> GetWords(bool capitalizeWords = false, string sentence)
+{
+	...
+}
+```
+
+sentence是必选参数，因此必须放在可选参数的前面。
 
 #### 5.2 命名参数
 
