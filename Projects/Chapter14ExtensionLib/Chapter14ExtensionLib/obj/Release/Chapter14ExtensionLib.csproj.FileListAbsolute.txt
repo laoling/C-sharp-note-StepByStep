@@ -1,0 +1,4 @@
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter14ExtensionLib\bin\Release\Chapter14ExtensionLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter14ExtensionLib\bin\Release\Chapter14ExtensionLib.pdb
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter14ExtensionLib\obj\Release\Chapter14ExtensionLib.dll
+C:\Users\Administrator\AppData\Local\Temporary Projects\Chapter14ExtensionLib\obj\Release\Chapter14ExtensionLib.pdb
