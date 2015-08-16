@@ -599,6 +599,28 @@ myTimer.Elapsed += (source, e) => Console.WriteLine(
 
 #### 7.3 Lambda表达式的参数
 
+在前面代码中，Lambda表达式使用类型推理功能确定所传送的参数类型。实际上这不是必须的，也可以定义类型。例如，可以使用下面的Lambda表达式：
+
+```csharp
+(int paramA, int paramB) => paramA + paramB;
+```
+
+其优点是代码更易理解，但不够简单灵活。在前面委托类型的示例中，可以通过隐式类型化的Lambda表达式来使用其他数字类型，例如long变量。
+
+注意，不能在同一个Lambda表达式中同时使用隐式和显式的参数类型。下面的Lambda表达式就不会编译，因为paramA是显式类型化的，而paramB是隐式类型化的：
+
+```csharp
+(int paramA, paramB) => paramA + paramB;
+```
+
+还可以定义没有参数的Lambda表达式，这使用空括号来表示：
+
+```csharp
+() => Math.PI;
+```
+
+当委托不需要参数时，但需要返回一个double值时，就可以使用这个Lambda表达式。
+
 #### 7.4 Lambda表达式的语句体
 
 #### 7.5 Lambda表达式用作委托和表达式树
