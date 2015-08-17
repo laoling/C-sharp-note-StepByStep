@@ -602,7 +602,7 @@ myTimer.Elapsed += (source, e) => Console.WriteLine(
 在前面代码中，Lambda表达式使用类型推理功能确定所传送的参数类型。实际上这不是必须的，也可以定义类型。例如，可以使用下面的Lambda表达式：
 
 ```csharp
-(int paramA, int paramB) => paramA + paramB;
+(int paramA, int paramB) => paramA + paramB
 ```
 
 其优点是代码更易理解，但不够简单灵活。在前面委托类型的示例中，可以通过隐式类型化的Lambda表达式来使用其他数字类型，例如long变量。
@@ -610,18 +610,76 @@ myTimer.Elapsed += (source, e) => Console.WriteLine(
 注意，不能在同一个Lambda表达式中同时使用隐式和显式的参数类型。下面的Lambda表达式就不会编译，因为paramA是显式类型化的，而paramB是隐式类型化的：
 
 ```csharp
-(int paramA, paramB) => paramA + paramB;
+(int paramA, paramB) => paramA + paramB
 ```
 
 还可以定义没有参数的Lambda表达式，这使用空括号来表示：
 
 ```csharp
-() => Math.PI;
+() => Math.PI
 ```
 
 当委托不需要参数时，但需要返回一个double值时，就可以使用这个Lambda表达式。
 
 #### 7.4 Lambda表达式的语句体
+
+在前面所有代码中，Lambda表达式的语句都是只使用了一个表达式。并说明了这个表达式如何解释为Lambda表达式的返回值，例如，如何给返回类型为int的委托使用表达式paramA+paramB作为Lambda表达式的语句体（假定paramA和paramB隐式或显式类型化为int值，如示例代码所示）。
+
+前面的一个示例说明了对于语句体中使用的代码而言，返回类型为void的委托的要求并不高：
+
+```csharp
+myTimer.Elasped += (source, e) => Console.WriteLine(
+	"Event handler called after {0} milliseconds.", (source as Timer).interval);
+```
+
+上面的语句不返回任何值，所以它只是执行，其返回值不在任何地方使用。
+
+Lambda表达式可以看作匿名方法语句的扩展，所以还可以在Lambda表达式的语句体中包含多个语句。为此只需要把一个代码块放在花括号中，类似于C#提供多行代码的其他情况：
+
+```csharp
+(param1, param2) => 
+{
+	//Multiple statements ahoy!
+}
+```
+
+如果使用Lambda表达式和返回类型不是void的委托类型，就必须用return关键字返回一个值，这与其他方法一样：
+
+```csharp
+(param1, param2) => 
+{
+	//Multiple statements ahoy!
+	return returnValue;
+}
+```
+
+例如可以把前面示例中的如下代码：
+
+```csharp
+PerformOperations((paramA, paramB) => paramA + paramB);
+```
+
+改写为：
+
+```csharp
+PerformOperations(delegate(int paramA, int paramB)
+	{
+		return paramA + paramB;
+	});
+```
+
+另外，也可以把代码改写为：
+
+```csharp
+PerformOperations((paramA, paramB) =>
+	{
+		return paramA + paramB;
+	});
+```
+
+这更像是原来的代码，因为它包含paramA和paramB参数的隐式类型化。
+
+在大多数情况下，使用单一的表达式时，大都使用Lambda表达式，它们肯定是最简洁的。说实话，如果需要多个语句，则定义一个非匿名方法来替代Lambda表达式比较好，这也会使代码更便于重用。
 
 #### 7.5 Lambda表达式用作委托和表达式树
 
