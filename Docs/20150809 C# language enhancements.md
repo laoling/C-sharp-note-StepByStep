@@ -691,11 +691,11 @@ PerformOperations((paramA, paramB) =>
 
 一般可以把拥有至多8个参数的Lambda表达式表示为如下泛型类型，它们都在System命名空间中定义：
 
-* Action表示的Lambda表达式不带参数，返回类型是void。
-* Action<>表示的Lambda表达式有至多8个参数，返回类型是void。
-* Fun<>表示的Lambda表达式有至多8个参数，返回类型不是void。
+* `Action`表示的Lambda表达式不带参数，返回类型是void。
+* `Action<>`表示的Lambda表达式有至多8个参数，返回类型是void。
+* `Fun<>`表示的Lambda表达式有至多8个参数，返回类型不是void。
 
-Action<>有至多8个泛型类型参数，分别用于Lambda表达式的8个参数，Fun<>有至少9个泛型类型的参数，分别用于Lambda表达式8个参数和返回类型。在Fun<>中，返回类型总是在列表的最后。
+`Action<>`有至多8个泛型类型参数，分别用于Lambda表达式的8个参数，`Fun<>`有至少9个泛型类型的参数，分别用于Lambda表达式8个参数和返回类型。在`Fun<>`中，返回类型总是在列表的最后。
 
 例如下面的Lambda表达式：
 
@@ -703,9 +703,59 @@ Action<>有至多8个泛型类型参数，分别用于Lambda表达式的8个参�
 (int paramA, int paramB) => paramA + paramB
 ```
 
-可以表示为Fun<int,int,int>类型的委托，因为它有两个int参数，返回类型是int。
+可以表示为`Fun<int,int,int>`类型的委托，因为它有两个int参数，返回类型是int。
 
 第二，可以把Lambda表达式解释为表达式树。表达式树是Lambda表达式的抽象表示，但不能直接执行。可以使用表达式树以编程方式分析Lambda表达式，执行操作，以响应Lambda表达式。
 
+显然这是一个复杂的主题，但表达式树对后面介绍的LINQ功能至关重要。下面给出一个具体例子。LINQ架构包含一个泛型类Expression<>，可用于封装Lambda表达式。使用这个类的一种方式是提取用C#编写的Lambda表达式，把它转换为相应的SQL脚本，以便在数据库中直接执行。
+
+目前先不需要了解太多的内容，在后面我们会遇到这个问题，到时候就能顺利理解其过程，因为现在我们已经理解了C#提供的重要概念。
+
 #### 7.6 Lambda表达式和集合
+
+学习了Func<>泛型委托之后，就可以理解System.Linq命名空间为数组类型提供的一些扩展方法了。例如有一个扩展方法Aggregate()定义了3个重要版本，如下所示：
+
+```csharp
+public static TSource Aggregate<TSource>(
+	this IEnumerable<TSource>  source,
+	Func<TSource, TSource, Tsource> func);
+
+public static TAccumulate Aggregate<TSource, TAccumulate>(
+	this IEnumerable<TSource> source,
+	TAccumulate seed,
+	Func<TAccumulate, TSource, TAccumulate> func);
+
+public static TResult Aggregate<TSource, TAccumulate, TResult>(
+	this IEnumerable<TSource> source,
+	TAccumulate seed,
+	Func<TAccumulate, TSource, TAccumulate> func,
+	Func<TAccumulate, TResult> resultSelector);
+```
+
+这段代码初看很深奥，但如果分解开来，就很容易理解其工作过程。要把一个累加器函数应用于集合中从开始到结束的每队元素上，并把计算的结果作为下一个计算操作的输入。
+
+在三个重载版本中，最简单的版本是一个泛型类型，这可以从实例参数的类型推出。例如下面代码中，泛型类型是int：
+
+```csharp
+int[] myIntArray = {2, 6, 3};
+int result = myIntArray.Aggregate(...);
+```
+
+这等价于：
+
+```csharp
+int[] myIntArray = {2, 6, 3};
+int result = myIntArray.Aggregate<int>(...);
+```
+
+这里需要的Lambda表达式可以从扩展方法中推断出来。在这段代码中，类型TSource是int，所以必须为委托Func<int,int,int>提供一个Lambda表达式。如使用Lambda表达式这么写：
+
+```csharp
+int[] myIntArray = {2, 6, 3};
+int result = myIntArray.Aggregate((paramA, paramB) => paramA + paramB);
+```
+
+这个调用会使Lambda表达式调用两次，一次使用的参数是paramA=2，paramB=6，另一次使用的参数是paramA=8，paramB=3。最后赋予变量result的结果是int值11，即数组中所有元素的综合。
+
+扩展方法Aggregate()的其他两个重载版本是类似的，但可以执行略微复杂的计算。
 
