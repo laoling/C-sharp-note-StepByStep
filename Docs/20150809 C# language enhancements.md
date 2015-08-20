@@ -310,7 +310,7 @@ dynaminc myDynamicVar;
 
 与前面介绍的var关键字不同，的确存在dynamic类型，所以在声明myDynamicVar时，无需直接初始化它的值。
 
->dynamic类型不同寻常之处，在于它仅在编译期间存在，在运行期间它会被System.Object类型替代。这是比较细微的实现细节，但必须记住这一点，后面会用它澄清些讨论。一旦有了动态变量，就可以继续访问其成员（这里没有列出实际获取变量值的代码）。
+>dynamic类型不同寻常之处，在于它仅在编译期间存在，在运行期间它会被`System.Object`类型替代。这是比较细微的实现细节，但必须记住这一点，后面会用它澄清些讨论。一旦有了动态变量，就可以继续访问其成员（这里没有列出实际获取变量值的代码）。
 
 ```csharp
 myDynamicVar.DoSomething("With this!");
@@ -475,7 +475,7 @@ MyMethod(
 
 ## 六、扩展方法 ##
 
-扩展方法可以扩展类型的功能，但无需修改类型本身。甚至可以使用扩展方法扩展不能修改的类型，包括在.NET Framework中定义的类型。例如使用方法甚至可以给System.String等基本类型添加功能。
+扩展方法可以扩展类型的功能，但无需修改类型本身。甚至可以使用扩展方法扩展不能修改的类型，包括在.NET Framework中定义的类型。例如使用方法甚至可以给`System.String`等基本类型添加功能。
 
 为了扩展类型的功能，需要提供可以通过该类型的实例调用的方法。为此创建的方法称为扩展方法（extension method），它可以带任意数量的参数，返回任意类型（包括void）。要创建和使用扩展方法，必须：
 
@@ -707,13 +707,13 @@ PerformOperations((paramA, paramB) =>
 
 第二，可以把Lambda表达式解释为表达式树。表达式树是Lambda表达式的抽象表示，但不能直接执行。可以使用表达式树以编程方式分析Lambda表达式，执行操作，以响应Lambda表达式。
 
-显然这是一个复杂的主题，但表达式树对后面介绍的LINQ功能至关重要。下面给出一个具体例子。LINQ架构包含一个泛型类Expression<>，可用于封装Lambda表达式。使用这个类的一种方式是提取用C#编写的Lambda表达式，把它转换为相应的SQL脚本，以便在数据库中直接执行。
+显然这是一个复杂的主题，但表达式树对后面介绍的LINQ功能至关重要。下面给出一个具体例子。LINQ架构包含一个泛型类`Expression<>`，可用于封装Lambda表达式。使用这个类的一种方式是提取用C#编写的Lambda表达式，把它转换为相应的SQL脚本，以便在数据库中直接执行。
 
 目前先不需要了解太多的内容，在后面我们会遇到这个问题，到时候就能顺利理解其过程，因为现在我们已经理解了C#提供的重要概念。
 
 #### 7.6 Lambda表达式和集合
 
-学习了Func<>泛型委托之后，就可以理解System.Linq命名空间为数组类型提供的一些扩展方法了。例如有一个扩展方法Aggregate()定义了3个重要版本，如下所示：
+学习了`Func<>`泛型委托之后，就可以理解`System.Linq`命名空间为数组类型提供的一些扩展方法了。例如有一个扩展方法`Aggregate()`定义了3个重要版本，如下所示：
 
 ```csharp
 public static TSource Aggregate<TSource>(
@@ -748,7 +748,7 @@ int[] myIntArray = {2, 6, 3};
 int result = myIntArray.Aggregate<int>(...);
 ```
 
-这里需要的Lambda表达式可以从扩展方法中推断出来。在这段代码中，类型TSource是int，所以必须为委托Func<int,int,int>提供一个Lambda表达式。如使用Lambda表达式这么写：
+这里需要的Lambda表达式可以从扩展方法中推断出来。在这段代码中，类型TSource是int，所以必须为委托`Func<int,int,int>`提供一个Lambda表达式。如使用Lambda表达式这么写：
 
 ```csharp
 int[] myIntArray = {2, 6, 3};
@@ -757,5 +757,5 @@ int result = myIntArray.Aggregate((paramA, paramB) => paramA + paramB);
 
 这个调用会使Lambda表达式调用两次，一次使用的参数是paramA=2，paramB=6，另一次使用的参数是paramA=8，paramB=3。最后赋予变量result的结果是int值11，即数组中所有元素的综合。
 
-扩展方法Aggregate()的其他两个重载版本是类似的，但可以执行略微复杂的计算。
+扩展方法`Aggregate()`的其他两个重载版本是类似的，但可以执行略微复杂的计算。
 
