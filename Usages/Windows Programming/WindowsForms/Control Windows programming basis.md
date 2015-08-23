@@ -89,7 +89,21 @@ Validating | 当控件的CausesValidation属性设置为true，且该控件获�
 
 ## 二、Button控件 ##
 
+.NET Framework提供了一个派生于Control的类System.Windows.Forms.ButtonBase,它实现了Button空间所需的基本功能，所以程序员可以从这个类中派生，创建定制的Button控件。
+
+System.Windows.Forms命名空间提供了三个派生于ButtonBase的控件，即Button、CheckBox和RadioButton。本节主要讨论Button控件，后面再介绍另外两个按钮。
+
+Button控件存在于几乎所有的Windows对话框中，按钮主要用于执行3类任务：
+
+* 用某种状态关闭对话框（如OK和Cancel按钮）。
+* 给对话框上输入的数据执行操作（输入一定的条件后，单击Search）。
+* 打开另一个对话框或应用程序（如Help按钮）。
+
+对Button控件的处理是非常简单的。通常是在窗体上添加控件，再双击它，给Click事件添加代码，这对于大多数应用程序来说就足够了。
+
 ### 1、Button控件的属性
+
+下面介绍该控件的常用属性，了解如何操作它。下面的表格列出了Button类最常用的属性，但从技术上讲，它们都是在ButtonBase基类上定义的。这里只解释最常见的属性。完整列表请参阅.NET Framework SDK文档说明。
 
 ### 2、Button控件的事件
 
