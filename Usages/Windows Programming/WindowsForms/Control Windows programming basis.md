@@ -105,9 +105,51 @@ Button控件存在于几乎所有的Windows对话框中，按钮主要用于执�
 
 下面介绍该控件的常用属性，了解如何操作它。下面的表格列出了Button类最常用的属性，但从技术上讲，它们都是在ButtonBase基类上定义的。这里只解释最常见的属性。完整列表请参阅.NET Framework SDK文档说明。
 
+属性 | 说明
+:----:|:---:
+FlatStyle | 可以用这个属性改变按钮的样式。如果把样式设置为PopUp，则该按钮就显示为平面，直到用户再把鼠标指针移动到它上面为止。此时按钮会弹出，显示为3D外观
+Enabled | 这个属性派生于Control，但这里仍讨论它，因为这是一个非常重要的属性，把Enabled设置为false，则该按钮就会灰显。单击它，不会起任何作用
+Image | 可以指定一个在按钮上显示的图像（位图，图标等）
+ImageAlign | 指定按钮上的图像在什么地方显示
+
 ### 2、Button控件的事件
 
+按钮最常用的事件是Click。只要用户单击了按钮，即当鼠标指向该按钮时，按下鼠标左键，再释放它，就会引发该事件。如果在按钮上单击了鼠标左键，然后把鼠标移动到其他位置，再释放鼠标，将不会引发Click事件。同样，在按钮得到焦点，且用户按下了回车键时，也会引发Click事件。如果窗体上有一个按钮，就总是要处理这个事件。
+
 ### 3、添加事件处理程序
+
+双击English按钮，在事件处理程序中添加如下代码：
+
+```csharp
+private void buttonEnglish_Click(object sender, EventArgs e)
+{
+	Text = "Do you speak English?";
+}
+```
+
+在VS创建处理事件的方法时，方法名是控件名、下划线和要处理事件名的组合。
+
+对于Click事件，第一个参数Object sender包含被单击的控件。在这个示例中，控件总是由方法名来标识，但在其他情况下，许多控件可能使用同一个方法来处理事件，此时就要通过查看这个值，来确定是哪个控件调用了该方法。后面介绍的文本框控件一节说明了多个控件如何使用同一个方法。另一个参数System.EventArgs e 包含实际发生的事情的信息。在本例中，不需要这些信息。
+
+返回设计视图，双击Danish按钮，进入这个按钮的事件处理程序，下面是代码：
+
+```csharp
+private void buttonDanish_Click(object sender, EventArgs e)
+{
+	Text = "Taler du danak?";
+}
+```
+
+这个方法与btnEnglish_Click相同，但文本是丹麦文字。最后，以相同的方式添加OK按钮的事件处理程序。其代码有一定不同之处：
+
+```csharp
+private void buttonOK_Click(object sender,EventArgs e)
+{
+	Application.Exit();
+}
+```
+
+使用这段代码，就可以退出应用程序。这就是第一个示例。编译这个示例，运行它，点击几个按钮，会发现对话框标题栏上的文本改变了。
 
 ## 三、Label和LinkLabel控件 ##
 
