@@ -153,6 +153,30 @@ private void buttonOK_Click(object sender,EventArgs e)
 
 ## 三、Label和LinkLabel控件 ##
 
+Label控件也许是最常用的控件。在任何Windows应用程序中，都可以在对话框中见到它们。标签是一个简单的控件，其用途只有一个：在窗体上显示文本。
+
+.NET Framework包含两个标签控件，它们可以用截然不同的方式来显示：
+
+* Label是标准的Windows标签。
+* LinkLabel类似于标准标签（派生于标准标签），但以Internet链接的方式显示（超链接）。
+
+标准的Label通常不需要添加任何事物处理代码。但它也像其他所有控件一样支持事件。对于LinkLabel控件，如果希望用户可以单击它，进入文本中显示的网页，就需要添加其他代码。
+
+Label控件有非常多的属性。大多数属性都派生于Control，但有一些属性是新增的。下表列出了最常见的属性。如果没有特别说明，Label和LinkLabel控件中都存在这些属性。
+
+属性 | 说明
+:----:|:---:
+BorderStyle | 可以指定标签边框的样式。默认为无边框
+FlatStyle | 控制显示控件的方式。把这个属性设置为PopUp，表示控件一直显示为平面样式，直到用户把鼠标指针移动到该控件上面，此时，控件显示为弹起样式
+Image | 指定要在标签上显示的图像（位图，图标等）
+ImageAlign | 指定图像显示在标签的什么地方
+LinkArea | （LinkLabel）文本中显示为链接的部分
+LinkColor | （LinkLabel）链接的颜色
+Links | （LinkLabel）LinkLabel可以包含多个链接。利用这个属性可以查找需要的链接。控件会跟踪显示文本中的链接，不能在设计期间使用
+LinkVisited | （LinkLabel）把它设置为true，单击控件，链接就会显示另一种颜色
+TextAlign | 指定文本显示在控件的什么地方
+VisitedLinkColor | （LinkLabel）用户单击LinkLabel后控件的颜色
+
 ## 四、TextBox控件 ##
 
 ### 1、TextBox控件的属性
