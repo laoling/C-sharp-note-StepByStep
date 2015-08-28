@@ -235,9 +235,32 @@ TextChanged | 只要文本框中的文本发生了改变，无论发生什么改
 
 ### 1、RadioButton控件的属性
 
+这个按钮派生于ButtonBase，前面有一个使用按钮的示例了，所以需要描述的属性仅有几个，如表所示。完整的列表请参考.NET Framework SDK文档说明。
+
+属性 | 说明
+:----:|:---:
+Appearance | RadioButton可以显示为一个标签，相应的圆点放在左边中间或右边，或者显示为标准按钮。当它显示为按钮时，控件被选中时显示为按下状态，否则显示为弹起状态
+AutoCheck | 如果这个属性为true，用户单击单选按钮时，会显示一个选中标记，如果该属性为false，就必须在Click事件处理程序的代码中手工选中单选按钮
+CheckAlign | 使用这个属性，可以改变单选按钮的复选框的对齐形式，默认是ContentAlignment.MiddleLeft
+Checked | 表示控件的状态。如果控件有一个选中标记，它就是true，否则为false
+
 ### 2、RadioButton控件的事件
 
+在处理RadioButton控件时，通常只使用一个事件，但还可以订阅许多其他事件。本章只介绍两个事件。介绍第二个事件的原因是它们有微妙的区别。
+
+属性 | 说明
+:----:|:---:
+CheckedChanged | 当RadioButton的选中选项发生改变时，引发这个事件
+Click | 每次单击RadioButton时，都会引发该事件。这与CheckedChange事件是不同的，因为连续单击RadioButton两次或多次只改变Checked属性一次（而且只有尚未选中时才如此）。而且如果被单击按钮的AutoCheck属性是false，则该按钮根本不会被选中，只引发Click事件
+
 ### 3、CheckBox控件的属性
+
+可以想象，这个控件的属性和事件非常类似于RadioButton控件，但有两个新属性：
+
+属性 | 说明
+:----:|:---:
+CheckState | 与RadioButton不同，CheckBox有三种状态：Checked、Indeterminate和Unchecked。复选框的状态时Indeterminate时，控件旁边的复选框通常是灰色的，表示复选框的当前值是无效的。或者无法确定（例如，如果选中标记表示文件的只读状态，且选中了两个文件，则其中一个文件是只读的，另一个文件不是。）
+ThreeState | 这个属性为false时，用户就不能把CheckState属性改为Indeterminate。但仍可以在代码中把CheckState属性改为Indeterminate
 
 ### 4、CheckBox控件的事件
 
