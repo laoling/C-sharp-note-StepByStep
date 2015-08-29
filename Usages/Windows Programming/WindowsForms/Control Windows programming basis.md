@@ -264,7 +264,20 @@ ThreeState | 这个属性为false时，用户就不能把CheckState属性改为I
 
 ### 4、CheckBox控件的事件
 
+一般只使用这个控件的一两个事件。RadioButton和CheckBox都有CheckChanged事件，但效果不同。
+
+事件 | 说明
+:----:|:---:
+CheckedChanged | 当复选框的Checked属性发生变化时，就引发该事件，注意在复选框中，当ThreeState属性为true时，单击复选框可能不会改变Checked属性，在复选框从Checked变为Indeterminate状态时，就会出现这个情况
+CheckedStateChanged | 当CheckedState属性改变时，引发该事件。CheckedState属性的值可以是Checked和Unchecked。只要Checked属性改变了，就会引发该事件。另外当状态从Checked变为Indeterminate时，也会引发该事件
+
+下面在使用之前，再介绍下GroupBox控件。
+
 ### 5、GroupBox控件
+
+GroupBox控件常常用于合理地组合一组控件，如RadioButton及CheckBox控件，显示一个框架，其上有一个标题。
+
+组框用法很简单，把它拖到窗体上，再把所需的控件拖放到组框中即可。
 
 ## 六、RichTextBox控件 ##
 
