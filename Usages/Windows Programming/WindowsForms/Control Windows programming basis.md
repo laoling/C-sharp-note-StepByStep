@@ -289,6 +289,30 @@ GroupBox控件常常用于合理地组合一组控件，如RadioButton及CheckBo
 
 ### 1、RichTextBox控件的属性
 
+如果上面这种文本框比上节介绍的文本框更高级，我们会期待它有一些新特性。下表列出了RichTextBox的一些最常用属性。
+
+属性 | 说明
+:----:|:---:
+CanRedo | 如果上一个被撤销的操作可以使用Redo重复，这个属性就是true
+CanUndo | 如果可以在RichTextBox上撤销上一个操作，这个属性就是true，注意，CanUndo在TextBoxBase中定义，所以也可以用于TextBox控件
+RedoActionName | 这个属性包含通过Redo方法执行的操作名称
+DetectUrls | 这个属性设置为true，可以使控件检查URL，并格式化它们（像在浏览器中那样有下划线）
+Rtf | 它对应于Text属性，但包含RTF格式的文本
+SelectedRtf | 使用这个属性可以获取或设置控件中被选中的RTF格式文本。如果把相应文本复制到另一个应用程序中，例如Word，该文本会保留所有的格式化信息
+SelectedText | 与SelectedRtf一样，可以使用这个属性获取或设置被选中的文本。但与该属性的RTF版本不同，所有格式化的信息都会丢失
+SelectionAlignment | 它表示选中文本的对齐方式，可以是Center、Left、Right
+SelectionBullet | 使用这个属性可以确定选中的文本是否格式化为项目符号的格式，或使用它插入或删除项目符号
+BulletIndent | 使用这个属性可以指定项目符号的缩进像素值
+SelectionColor | 这个属性可以修改选中文本的颜色
+SelectionFont | 这个属性可以修改选中文本的字体
+SelectionLength | 使用这个属性可以设置或获取选中文本的长度
+SelectionType | 这个属性包含了选中文本的信息。它可以确定是选择了一个或多个OLE对象，还是仅选择了文本
+ShowSelectionMargin | 如果把这个属性设置为true，在RichTextBox的左边就会出现页边距，这将使用户更易选择文本
+UndoActionName | 如果用户选择撤销某个动作，该属性将获取该操作的名称
+SelectionProtected | 把这个属性设置为true，可以指定不修改文本的某些部分
+
+从上表可以看出，大多数属性都与选中的文本有关。这是因为在用户处理其文本时，对它们应用的任何格式化操作都是对用户选择出来的文本进行的。万一没有选择文本，格式化操作就从文本的光标所在的位置开始应用，该位置称为插入点。
+
 ### 2、RichTextBox控件的事件
 
 ## 七、ListBox和CheckedListBox控件 ##
