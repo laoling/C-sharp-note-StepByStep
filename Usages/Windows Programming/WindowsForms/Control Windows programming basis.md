@@ -333,7 +333,41 @@ ListBox类派生于ListControl类。后者提供了.NET Framework内置列表类
 
 ### 1、ListBox控件的属性
 
+除非明确声明，下表中列出所有属性都可以用于ListBox类和CheckedListBox类。
+
+属性 | 说明
+:----:|:---:
+SelectedIndex | 这个值表示列表框中选中项的基于0的索引，如果列表框可以一次选择多个选项，这个属性就包含选中列表中第一个选项的索引
+ColumnWidth | 在包含多个列的列表框中，这个属性指定列宽
+Items | Items集合包含列表框中的所有选项，使用这个集合的属性可以增加和删除选项
+MultiColumn | 列表框可以有多个列。使用这个属性可以获取是否采用多列形式的信息，也可以设置是否采用多列形式
+SelectedIndices | 这个属性是一个集合，包含列表框中选中项的所有基于0的索引
+SelectedItem | 在只能选择一个选项的列表框中，这个属性包含选中的选项。在可以选择多个选项的列表框中，这个属性包含选中项中的第一项
+SelectedItems | 这个属性是一个集合，包含当前选中的所有选项
+SelectionMode | 在列表框中，可以使用ListSelectionMode枚举中的4种选择模式：None不能选择任何选项；One只能一次选择一个选项；MultiSimple可以选择多个选项。使用这个模式，在单击列表中的一项时，该项就会被选中，即使单击另一项，该项也保持选中状态，除非再次单击它；MultiExtended可以选择多个选项，用户还可以使用Ctrl、Shift和箭头键进行选择。它与MultiSimple不同，如果先单击一项，然后单击另一项，则只选中第二个单击的项
+Sorted | 把这个属性设置为true。会使列表框对它包含的选项按字母顺序排列
+Text | 许多控件都有Text属性。但这个Text属性与其他控件的Text属性大不相同。如果设置列表框控件的Text属性，它将搜索匹配该文本的选项，并选择该选项。如果获取text属性，返回的值是列表中第一个选中的选项。如果SelectionMode是None，就不能使用这个属性
+CheckedIndices | 只适用于CheckedListBox，这个属性是一个集合，包含CheckedListBox中状态为checked或Indeterminate的所有选项的索引
+CheckedItems | 只适用于CheckedListBox，这是一个集合，包含CheckedListBox中状态是checked或Indeterminate的所有选项
+CheckOnClick | 只适用于CheckedListBox，如果这个属性是true，则选项就会在用户单击它时改变它的状态
+ThreeDCheckBoxes | 只适用于CheckedListBox，设置这个属性，就可以选择平面或正常的CheckBoxes
+
 ### 2、ListBox控件的方法
+
+为了高效地操作列表框，读者应了解它可以调用的一些方法。下表列出了最常用的方法。除非特别声明，否则这些方法均属于ListBox和CheckedListBox类。
+
+方法 | 说明
+:----:|:---:
+ClearSelected() | 消除列表框中的所有选中项
+FindString() | 查找列表框中第一个指定字符串开头的字符串，例如FindString("a")就是查找列表框中第一个以a开头的字符串
+FindStringExact() | 与FindString类似，但必须匹配整个字符串
+GetSelected() | 返回一个表示是否选择一个选项的值
+SetSelected() | 设置或清除选项的选中状态
+ToString() | 返回当前选中的选项
+GetItemChecked() | 只适用于CheckedListBox，返回一个表示选项是否被选中的值
+GetItemCheckState() | 只适用于CheckedListBox，返回一个表示选项的选中状态的值
+SetItemChecked() | 只适用于CheckedListBox，设置指定为选中状态的选项
+SetItemCheckState() | 只适用于CheckedListBox，设置选项的选中状态
 
 ### 3、ListBox控件的事件
 
