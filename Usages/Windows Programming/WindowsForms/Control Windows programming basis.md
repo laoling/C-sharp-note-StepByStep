@@ -417,13 +417,40 @@ View | 列表视图可以用四种不同的基本模式显示其选项：LargeIc
 
 ### 2、ListView控件的方法
 
+对于像列表视图这样复杂的控件来说，专用的方法非常少。下表列出了这些方法：
+
+方法 | 说明
+:----:|:---:
+BeginUpdate() | 调用这个方法，将告诉列表视图停止更新，直到调用EndUpdate()为止。当一次插入多个选项时使用这个方法很有用，因为它会禁止视图闪烁，大大提高速度
+Clear() | 彻底清除列表视图，删除所有的选项和列
+EndUpdate() | 在调用BeginUpdate之后调用这个方法。在调用这个方法时，列表视图会显示其所有选项
+EnsureVisible() | 在调用这个方法时，列表视图会滚动，以显示指定索引的选项
+GetItemAt() | 返回列表视图中位于x,y位置的选项
+
 ### 3、ListView控件的事件
+
+下表列出了要处理的ListView控件的事件。
+
+事件 | 说明
+:----:|:---:
+AfterLabelEdit | 在编辑了标签后，引发该事件
+BeforeLabelEdit | 在用户开始编辑标签前，引发该事件
+ColumnClick | 在单击一个列时，引发该事件
+ItemActivate | 在激活一个选项时，引发该事件
 
 ### 4、ListViewItem
 
+列表视图中的选项总是ListViewItem类的一个实例。ListViewItem包含要显示的信息，如文本和图标的索引。ListViewItems对象有一个SubItems属性，其中包含另一个类ListViewSubItem的实例。如果ListView控件处于Details或Tile模式下，这些子选项就会显示出来。每个子选项表示列表视图中的一列。子选项和主选项之前的区别是，子选项不能显示图标。
+
+通过Items集合把ListViewItems添加到ListView中，通过ListViewItem上的SubItem集合把ListViewSubItems添加到ListViewItem中。
+
 ### 5、ColumnHeader
 
+要使列表视图显示列标题，需要把类ColumnHeader的实例添加到ListView的Columns集合中。当ListView控件处于Details模式下时，ColumnHeaders为要显示的列提供一个标题。
+
 ### 6、ImageList控件
+
+ImageList控件提供了一个集合，可以用于存储在窗体的其他控件中使用的图像。可以在图像列表中存储任何大小的图像，但在每个控件中，每个图像的大小必须相同。对于ListView，则需要两个ImageList控件，才能显示大图像和小图像。
 
 ## 九、TabControl控件 ##
 
