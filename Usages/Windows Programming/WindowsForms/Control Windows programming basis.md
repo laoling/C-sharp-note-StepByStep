@@ -386,6 +386,35 @@ ListView控件是本章最复杂的一个控件，它包含了超出文本范围
 
 ### 1、ListView控件的属性
 
+ListView的属性如下表所示：
+
+属性 | 说明
+:----:|:---
+Activation | 使用这个属性，可以控制用户在列表视图中激活选项的方式。可能的值如下：Standard：这个设置是用户为自己的计算机选择的值；OneClick：单击一个选项，激活它；TwoClick：双击一个选项，激活它
+Alignment | 这个属性可以控制列表视图中选项的对齐方式。有四个可能的值：Default，如果用户拖放一个选项，它将仍位于拖动前的位置；Left，选项与ListView控件的左边界对齐；Top，选项与ListView控件的顶边界对齐；SnapToGrid，ListView控件包含一个不可见的网格，选项都放在该网格中
+AllowColumnReorder | 如果把这个属性设置为true，就允许用户改变列表视图中列的顺序。如果这么做，就应该确保即使改变了列的属性顺序，填充列表视图的例程也能正确插入选项
+AutoArrange | 如果把这个属性设置为true，选项会自动根据Alignment属性排序。如果用户把一个选项拖放列表视图的中央，且Alignment是Left，则选项会自动左对齐。只有在View属性是LargeIcon或SmallIcon时，这个属性才有意义
+CheckBoxes | 如果把这个属性设置为true，列表视图中的每个选项会在其左边显示一个复选框。只有在View属性是Details或List时，这个属性才有意义
+CheckedIndices/CheckedItems | 利用这两个属性分别可以访问索引和选项的集合，该集合包含列表中被选中的选项
+Columns | 列表视图可以包含列。通过这个属性可以访问列集合，通过该集合，可以增加或删除列
+FocusedItem | 这个属性包含列表视图中有焦点的选项。如果没有选择任何选项，该属性就为null
+FullRowSelect | 这个属性为true时，单击一个选项，该选项所在的整行文本都会突出显示。如果该属性为false，则只有选项本身会突出显示
+GridLines | 把这个属性设置为true，则列表视图会在行和列之间绘制网格线。只有View属性为Details时这个属性才有意义
+HeaderStyle | 可以控制列标题的显示方式，有三种样式：Clickable，列标题显示为一个按钮；NonClickable，列标题不响应鼠标点击；None，不显示列标题
+HoverSelection | 这个属性设置为true时，用户可以把鼠标放在列表视图的一个选项上，以选择它
+Items | 列表视图中的选项集合
+LabelEdit | 这个属性设置为true时，用户可以在Details视图下编辑第一列的内容
+LabelWrap | 如果这个属性是true时，标签就会自动换行，以便显示所有文本
+LargeImageList | 这个属性包含ImageList，而ImageList包含大图像，这些图像可以在View属性为LargeIcon时使用
+MultiSelect | 这个属性设置为true时，用户可以选择多个选项
+Srollable | 这个属性设置为true时，就显示滚动条
+SelectedIndices/SelectedItems | 这两个属性分别包含选中索引和选项的集合
+SmallImageList | 当View属性为SmallIcon时，这个属性包含了ImageList，其中ImageList包含了要使用的图像
+Sorting | 可以让列表视图对它包含的选项排序。有三种可能的模式：Ascending，Descending，None
+StateImageList | ImageList包含图像的蒙版，这些图像蒙版可用作LargeImageList和SmallImageList图像的覆盖图，表示定制的状态
+TopItem | 返回列表视图项顶部的选项
+View | 列表视图可以用四种不同的基本模式显示其选项：LargeIcon，所有选项都在其旁边显示一个大图标（32x32）和一个标签；SmallIcon，所有选项都在其旁边显示一个小图标（16x16）和一个标签；List，只显示一列。该列可以包含一个图标和一个标签；Details，可以显示任意数量的列。只有第一列可以包含图标；Tile，显示一个大图标和一个标签，在图标的右边显示子项信息
+
 ### 2、ListView控件的方法
 
 ### 3、ListView控件的事件
