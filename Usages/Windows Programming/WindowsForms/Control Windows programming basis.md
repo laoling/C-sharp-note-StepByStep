@@ -464,4 +464,26 @@ TabControl控件的使用是非常简单的。可以在控件的TabPage对象集
 
 ### 1、TabControl控件的属性
 
+TabControl的属性一般用于控制TabPage对象容器的外观，特别是显示的选项卡的外观。
+
+属性 | 说明
+:----:|:---:
+Alignment | 控制选项卡在选项卡控件的什么位置显示，默认位置为控件的顶部
+Appearance | 控制选项卡的显示方式。选项卡可以显示为一般的按钮或带有平面样式
+HotTrack | 如果这个属性设置为true，则当鼠标指针滑过控件上的选项卡时，其外观就会改变
+Multiline | 如果这个属性设置为true，就可以有几行选项卡
+RowCount | 返回当前显示的选项卡行数
+SelectedIndex | 返回或设置选中选项卡的索引
+SelectedTab | 返回或设置选中的选项卡。注意这个属性在TabPages的实例上使用
+TabCount | 返回选项卡的总数
+TabPages | 这是空间中TabPage对象集合，使用这个集合可以添加和删除TabPage对象
+
 ### 2、使用TabControl控件
+
+TabControl的工作方式与前面的控件有些区别。这个控件只不过是用于显示选项卡的选项卡页面的容器。在工具箱中双击TabControl时，就会显示一个已添加了两个TabPage的控件。
+
+选择该控件时，在控件的右上角就会出现一个带三角形的小按钮。单击这个按钮，就会打开一个小窗口，即Actions窗口，用于访问控件的所选属性和方法。使用TabControl的Actions窗口，可以方便地在设计期间添加和删除TabPages。
+
+上面给TabControl添加选项卡页的过程可以让用户很快使用和运行该控件。另一方面，如果要改变选项卡的操作方式或样式，就应使用TabPages对话框；在选择Properties窗口中的TabPages时，可以通过按钮访问该对话框。TabPages属性也是用于访问TabControl控件上各个页面的集合。
+
+添加了需要的TabPages后，就可以给页面添加控件了，其方式与前面的GroupBox相同。
