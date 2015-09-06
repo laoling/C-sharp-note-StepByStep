@@ -10,9 +10,19 @@
 
 ## 一、菜单和工具栏 ##
 
+几乎每个Windows应用都包含菜单和工具栏。在为Windows操作系统写的程序中，菜单和工具栏可能是不可或缺的重要部分。为了帮助用户创建应用程序的菜单，VS提供了两个空间，使用它们不必做太多的工作，就可以快速创建外观类似于VS的菜单和工具栏。
+
 ### 1、两个实质一样的控件
 
+下面介绍的这两个空间是VS2005的新增控件，它们为开发人员提供了很多强大的功能。使用这两个空间可以创建出具有工具栏和菜单的应用程序。以前需要几个星期才能完成创建的应用程序，现在变成区区数秒即可完成的简单任务。
+
+我们要使用的控件包含在后缀为Strip的控件系列中，分别是ToolStrip、MenuStrip和StatusStrip。StatusStrip后面会详细介绍。从它们最纯粹的形式来看，ToolStrip和MenuStrip实际上是相同的控件，因为MenuStrip直接派生于ToolStrip。也就是说，ToolStrip能做的工作，MenuStrip也能完成。显然一起使用工作会完成的更好。
+
 ### 2、使用MenuStrip控件
+
+除了MenuStrip控件之外，还有许多控件可以填充菜单。3个最常见的控件是ToolStripMenuItem、ToolStripDropDown和ToolStripSeparator。这些控件表示查看菜单或工具栏中的水平或垂直分割线。
+
+除了MenuStrip外，还有一种菜单ContextMenuStrip。当用户右击一项时，关联菜单就会显示出来，它通常显示与该项相关的信息。
 
 ### 3、手工创建菜单
 
