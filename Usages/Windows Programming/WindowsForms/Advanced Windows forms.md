@@ -130,8 +130,188 @@ DoubleClickEnable | 在这个属性中，可以指定是否引发DoubleClick事�
 
 ## 四、生成MDI应用程序 ##
 
+创建MDI会涉及到什么问题？
+
+* 首先，希望用户能完成的任务应是需要一次打开多个文档的任务。例如，文本编辑器或文本查看器。
+* 第二，应在应用程序中提供工具栏来完成最常见的任务，例如设置字体样式、加载和保存文档等。
+* 第三，应提供一个包含Window菜单项的菜单，让用户可以重新定位打开的窗口（平铺和层叠）。显示所有已打开窗口的列表。
+
+MDI应用程序的另一个功能是如果打开了一个窗口，该窗口包含一个菜单，则该菜单就应集成到应用程序的主菜单上。
+
+MDI应用程序至少要由两个截然不同的窗口组成。第一个窗口叫做MDI容器（Container），可以在容器中显示的窗口叫做MDI子窗口。
+
 ## 五、创建控件 ##
+
+有时VS提供的控件不能满足用户的需求。原因有多方面，控件不能以希望的方式绘制自己，或者控件在某个方面有限制，或者需要的控件不存在。为此，Microsoft提供了创建满足需要的控件的方式。VS提供了一个项目类型Windows Control Library，使用它可以创建自己的控件。
+
+可以开发两种不同类型的自定义控件：
+
+* 用户或组合控件： 这种控件是根据现有控件的功能创建一个新控件。这类控件一般用于把控件的用户界面和功能封装在一起，或者把几个其他控件组合在一起，从而改善控件的界面。
+* 定制控件： 当没有控件可以满足要求时，就创建这类控件，即从头创建控件。它要自己绘出整个用户界面。在创建控件的过程中没有现有的控件可以使用。当想要创建的控件的用户界面与其他可用的控件都不同时，一般需要创建这样的控件。
+
+本章这里只讨论用户控件，因为从头设计和绘制控件已经超出了我们当下的范畴。
+
+用户控件继承于类System.Windows.Forms.UserControl。这个基类提供的控件具有.NET中控件应具有的所有基本功能——用户只需创建控件即可。实际上，任何对象都可以创建为一个控件，包括设计俏皮的标签乃至功能全面的网格控件。
+
+注：用户控件派生于System.Windows.Forms.UserControl类，而定制控件派生于System.Windows.Forms.Control类。
+
+在处理控件时，要考虑几个问题。如果控件不满足这些条件，人们就不会使用它。这些条件是：
+
+* 在设计期间，控件的操作方式应尽可能接近运行期间的操作方式。如果将一个标签和一个文本框合并，创建一个LabelTextBox控件，标签和文本框就都要在设计间显示出来，为标签输入的文本也要在设计期间显示出来。这里说的很简单，但在较复杂的情况下，就会出问题，就需要采取一种折中的方法。
+* 应可以在窗体设计器中按合理方式访问控件的属性。例如ImageList控件显示了一个对话框，用户可以在该对话框中浏览要包含的图像，导入了图像后，它们就显示在对话框的一个列表中。
+
+在后面，我们会通过例子说明如何创建控件。
+
+我们这里描述下这个控件LabelTextBox，后面还需要用到。
+
+从这个控件的名称可以看出，这个控件是使用两个现有控件来创建的。一步执行一个任务在Windows编程中非常常见：给窗体添加一个标签，再在该窗体中添加一个文本框，把文本框和标签的位置关联起来。下面看看这个控件的用户可以执行什么操作：
+
+* 用户可以把文本框放在标签的右边或下边，如果文本框放在标签的右边，就可以指定该控件的左边界与文本框之间的固定距离，使文本框对齐。
+* 用户应能使用文本框和标签的常用属性和事件。
 
 ### 1、调试用户控件
 
+调试用户控件与调试Windows应用程序大不相同。一般情况下，可以在某个位置添加断点，按下F5，看看发生什么情况。
+
 ### 2、扩展LabelTextbox控件
+
+最后，准备测试控件的属性。注意在LabelTextBox控件添加到窗体上时，其中的控件会移动到正确的位置上。因为把Position属性的默认值设置为Right，所以文本框位于标签的旁边，把Position属性设置为Below，文本框会移动到标签之下。
+
+#### 2.1、添加更多属性
+
+现在还不能对该控件进行什么操作，因为它还不能改变标签和文本框中的文本。下面添加两个属性：LabelText和TextBoxText。添加这些属性的方式与添加前两个属性的方式相同，也是打开项目，添加如下代码：
+
+```csharp
+public string LabelText
+{
+	get {return labelCaption.Text; }
+	set
+	{
+		labelCaption.Text = labelText =value;
+		MoveControls();
+	}
+}
+
+public string TextboxText
+{
+	get {return textBoxText.Text; }
+	set 
+	{
+		textBoxText.Text = value;
+	}
+}
+```
+
+还需要声明成员变量labelText来保存文本：
+
+```csharp
+private string mLabelText = "";
+
+public ctlLabelTextbox()
+{
+}
+```
+
+如果要插入文本，就把文本赋给标签和文本框控件的Text属性，返回Text属性的值。如果改变了标签的文本，需要调用MoveControls()，因为标签文本可能会影响文本框的位置。另一方面，插入到文本框中的文本不会使控件移动，如果文本比文本框长，超出文本框的部分就不会显示出来。
+
+最后，必须修改Load事件：
+
+```csharp
+private void otlLabelTextbox_Load(object sender, EventArgs e)
+{
+	labelCaption.Text = labelText;
+	Height = textBoxText.Height > labelCaption.Height ?
+		textBoxText.Height : labelCaption.Height;
+	MoveControls();
+}
+```
+
+Load事件把LabelCaption控件的文本设置为属性的值。这样，设计期间和运行期间显示的文本就是相同的。
+
+#### 2.2、添加更多事件处理程序
+
+现在该考虑控件应提供的事件了。因为该控件派生于UserControl类，所以继承了许多无需加以处理的功能。但有许多事件我们不希望以标准的方式交给用户。如KeyDown、KeyPress、KeyUp事件。需要修改这些事件的原因是，用户希望在文本框中按下一个键时，就引发这些事件。现在只有在控件本身获得焦点，且用户按下一个键时，才会引发这些事件。
+
+要改变其操作方式，必须处理文本框引发的事件，把它们发送给用户。给文本框添加KeyDown、KeyUp和KeyPress事件，并输入下面代码：
+
+```csharp
+private void textBoxText_KeyDown(object sender, KeyEventArgs e)
+{
+	OnKeyDown(e);
+}
+
+private void textBoxText_KeyPress(object sender, KeyEventArgs e)
+{
+	OnKeyPress(e);
+}
+
+private void textBoxText_KeyUp(object sender, KeyEventArgs e)
+{
+	OnKeyUp(e);
+}
+```
+
+调用OnKeyXXX方法会执行订阅事件的对应方法。
+
+#### 2.3、添加定制的事件处理程序
+
+在创建一个基类中不存在的事件时，需要做更多的工作。下面创建一个事件PositionChanged，当Position属性改变时，将引发该事件。为了创建这个事件，需要做3件事：
+
+* 需要一个合适的委托，用于调用用户赋给事件的方法。
+* 用户必须把一个方法赋给事件，以订阅该事件。
+* 必须调用用户赋给事件的方法。
+
+要使用的委托是由.NET Framwork提供的EventHandler委托。这是一个特殊的委托，它由其关键字event声明。下面的代码声明了一个事件，允许用户订阅该事件：
+
+```csharp
+public event System.EventHandler PositionChanged;
+
+public ctlLabelTextbox()
+{
+}
+```
+
+现在只剩下引发该事件了。当改变Position属性时，将引发该事件。所以在Position属性的set存取器中引发该事件：
+
+```csharp
+public PositionEnum Position
+{
+	get {return position;}
+	set
+	{
+		position = value;
+		MoveControls();
+		if (PositionChanged != null)
+			PositionChanged(this, new EventArgs());
+	}
+}
+```
+
+首先，确保检查PositionChanged是否为null，看看有没有订阅者。如果没有，就调用方法。
+
+可以像订阅其他事件那样订阅新的定制事件，但这里有一个小问题：该事件在事件窗口中显示之前，必须先生成控件。只有生成了控件，才能在LabelTextBoxText项目的窗体中选择控件，在属性面板的Events部分双击PositionChanged事件。接着给事件处理程序添加如下代码：
+
+```csharp
+private void ctlLabelTextbox1_PositionChanged(object sender, EventArgs e)
+{
+	MessageBox.show("Changed");
+}
+```
+
+该定制事件处理程序什么都不会做，它只是说明位置改变了。
+
+最后，在窗体上添加一个按钮，双击它，给项目添加该按钮的Click事件处理程序，添加如下代码：
+
+```csharp
+private void buttonToggle_Click(object sender, EventArgs e)
+{
+	ctlLabelTextbox1.Position = ctlLabelTextbox1.Position ==
+	LabelTextbox.ctlLabelTextbox.PositionEnum.Right ?
+	LabelTextbox.ctlLabelTextbox.PositionEnum.Below :
+	LabelTextbox.ctlLabelTextbox.PositionEnum.Right;
+}
+```
+
+当运行应用程序时，就可以在运行期间改变文本框的位置。每次移动文本框，都会触发事件PositionChanged，显示一个信息框。
+
+这个示例基本上到此就结束了，还可以继续进行细化。
