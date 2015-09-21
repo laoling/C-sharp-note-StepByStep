@@ -79,10 +79,41 @@ Publish向导在本地的Internet Information Services Web服务器上创建了�
 
 ## 三、Visual Studio安装和部署项目类型 ##
 
+VS窗口位置：：Add New Project >> Other Project Types >> Visual Studio Installer >> Installed Templates >> Setup and Deployment
+
+下面是项目类型以及它们的作用：
+
+* 我们要使用Setup Project模板。此模板用于创建Windows安装软件包，所以可以用来部署Windows应用程序。
+* Web Setup Project 模板用于安装Web应用程序，这个项目模板将在后面使用。
+* Merge Module Project 模板用于创建Windows Installer合并模块。合并模块是安装程序文件，可以包括在多个Microsoft Installer安装软件包中。对于随多个安装程序一起安装的组件而言，可以创建一个合并模块，以在安装软件包中包括此模块。合并模块的一个示例是.NET运行库本身：它在合并模块中提供，因此可以在应用程序的安装软件包中包括.NET运行库。在示例应用程序中将要使用一个合并模块。
+* Setup Wizard是选择其他模板的一种方式。可以创建Windows安装软件包、合并模块或CAB文件。
+* Cab Project模板允许创建cabinet文件。Cabinet文件可以用于将多个程序集合并到一个文件中，并进行压缩。因为Cabinet文件可以压缩，所以Web客户机可以从服务器上下载较小的文件。
+
 ## 四、Microsoft Windows安装程序结构 ##
+
+在Windows Installer推出之前，程序员必须创建定制的安装程序。生成安装程序要做大量繁琐的工作，而且许多程序并不遵循Windows规则。通常要改写旧版本的系统DLL，因为安装程序不会检查版本。
+
+另外，应用程序文件的复制目录通常是错误的。例如如果使用硬编码的目录字符串C:\Program Files但系统管理员改变了默认驱动器号，或使用了操作系统的国际化版本，安装就会失败。
+
+Windows Installer的第一个版本随Office2000发布，它也可以作为分发软件包发布，这些可分发软件包可以包含在其他应用程序软件包中。Windows Installer版本1.1新增了对注册COM+组件的支持，版本1.2支持Windows ME的文件保护机制。版本2.0新增了对.NET程序集安装和Windows64位版本的支持。而在.NET4.0中，允许使用的Windows Installer最低版本是3.1。
 
 ### 4.1 Windows安装程序术语
 
+使用Windows安装程序时，必须理解Windows安装程序技术使用的一些术语： 软件包、功能和组件。
+
+软件包包含一个或多个功能块。软件包是单一的Microsoft安装程序（MSI）数据库。功能是用户眼中的产品功能，由多个特性和组件构成。组件是开发人员从安装的角度来看的：它是最小的安装单元，由一个或多个文件组成。
+
+区分功能和组件的原因是单一的组件可以包含在多个功能中，一个功能不能包含在多个功能中。
+
 ### 4.2 Windows安装程序的优点
+
+Windows安装程序的优点如下：
+
+* 可以安装功能。也可以不安装功能。或进行通知（advertisement）。有了通知，软件包的功能会在首次使用时安装。或许您在使用Microsoft Word时已经注意到了Windows安装程序的用法。如果未安装Word的通知功能，只要您使用此功能，就会自动安装Word。
+* 如果应用程序受损，可以通过Windows安装程序软件包的修复功能自我修复。
+* 如果安装失败，就会自动回滚。安装失败之后，所有内容都保持原样：在系统上没有附加的注册表项和文件等。
+* 使用卸载功能，可以删除所有的文件，注册表项等。这样就可以完全卸载应用程序。不会留下临时文件，注册表也可以恢复原样。
+
+阅读MSI数据库文件的表，可以获取以下信息：复制了什么文件，写入了什么注册表项等。
 
 ## 五、实践 ##
