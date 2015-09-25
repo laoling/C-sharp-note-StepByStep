@@ -102,6 +102,44 @@ WPF窗口以及其中所有元素都使用与设备无关的单位进行度量�
 
 ### 4、WPF体系结构
 
+WPF使用多层体系结构。
+
+在顶层，应用程序与完全托管C#代码编写的一组高层服务进行交互。至于将.NET对象转换为Direct3D纹理和三角形的实际工作，是在后台由一个名为milcore.dll的低级非托管组件完成的。milcore.dll是使用非托管代码实现的，因为它需要和Direct3D紧密集成，并且它对性能极其敏感。
+
+它包含的一些重要组件如下：
+
+* PresentationFramework.dll包含WPF顶层的类型，包括那些表示窗口、面板以及其他类型控件的类型。它还实现了高层编程抽象，如样式。开发人员直接使用的大部分类都来自这个程序集。
+* PresentationCore.dll包含了基础类型，如UIElement类和Visual类，所有形状类和控件类都继承自这两个类。如果不需要窗口和控件抽象层的全部特征，可使用这一层。而且仍能利用WPF的渲染引擎。
+* WindowsBase.dll包含了更多基本要素，这些要素具有在WPF之外重用的潜能，如DispatcherObject类和DependencyObject类，这两个类引入了依赖项属性。
+* milcore.dll是WPF渲染系统的核心，也是媒体集成层（MIL）的基础。其合成引擎将可视化元素转换为Direct3D所期望的三角形和纹理。尽管将milcore.dll视为WPF的一部分，但它也是Win7的核心系统组件之一。实际上，桌面窗口管理器（DWM）使用milcore.dll渲染桌面。
+* WindowsCodecs.dll是一套提供图像支持的低级API，如处理显示及缩放位图和JPEG图像。
+* Direct3D是一套低级API，WPF应用程序中所有图形都是由它进行渲染。
+* User32用于决定哪些程序实际占有桌面的哪一部分。所以它仍被包含在WPF中，但不再负责渲染通用控件。
+
+需要认识到最重要的事实是，在WPF中所有绘图内容都由Direct3D渲染。不管使用普通显卡还是使用功能更强大的显卡，不管使用基本控件还是绘制更复杂的内容，也不管是在什么系统上运行应用程序，情况都是如此。甚至二维图形和普通文本也被转换为三角形并被传送到Direct3D管线，而不使用GDI+或User32渲染图形。
+
+**类层次结构**
+
+我们先分析下构成WPF基本控件集合的类的层次结构是很有帮助的。
+
+下面我们将简要介绍核心类：
+
+	WPF核心名称控件以System.Windows开头（如System.Windows System.Windows.Controls 以及 System.Windows.Media）。唯一例外是由System.Windows.Forms开头的命名空间，它们是Windows窗体工具包的一部分。
+
+1. System.Threading.DispatcherObject类
+
+	WPF应用程序使用为人熟知的单线程亲和模型（STA），这意味着整个用户界面由单个线程拥有。从另一个线程与用户界面元素进行交互是不安全的。为方便使用此模型，每个WPF应用程序由协调消息的调度程序管理。通过继承自DispatcherObject类，用户界面中的每个元素都可以检查代码是否在正确的线程上运行，并能通过访问调度程序为用户界面线程封送代码。
+
+2. System.Windows.DependencyObject类
+3. System.Windows.Media.Visual类
+4. System.Windows.UIElement类
+5. System.Windows.FrameworkElement类
+6. System.Windows.Shapes.Shape类
+7. System.Windows.Controls.Control类
+8. System.Windows.Controls.ContentControl类
+9. System.Windows.Controls.ItemsControl类
+10. System.Windows.Controls.Panel类
+
 ### 5、WPF4.5
 
 ## 二、XAML ##
