@@ -124,13 +124,18 @@ WPF使用多层体系结构。
 
 下面我们将简要介绍核心类：
 
-	WPF核心名称控件以System.Windows开头（如System.Windows System.Windows.Controls 以及 System.Windows.Media）。唯一例外是由System.Windows.Forms开头的命名空间，它们是Windows窗体工具包的一部分。
+	WPF核心名称控件以System.Windows开头（如System.Windows System.Windows.Controls
+	以及 System.Windows.Media）。唯一例外是由System.Windows.Forms
+	开头的命名空间，它们是Windows窗体工具包的一部分。
 
 1. System.Threading.DispatcherObject类
 
 	WPF应用程序使用为人熟知的单线程亲和模型（STA），这意味着整个用户界面由单个线程拥有。从另一个线程与用户界面元素进行交互是不安全的。为方便使用此模型，每个WPF应用程序由协调消息的调度程序管理。通过继承自DispatcherObject类，用户界面中的每个元素都可以检查代码是否在正确的线程上运行，并能通过访问调度程序为用户界面线程封送代码。
 
 2. System.Windows.DependencyObject类
+
+	在WPF中，主要通过属性与屏幕上的元素进行交互。在早期设计阶段，WPF的设计者决定创建一个更加强大的属性模型，该模型支持许多特性，例如更改通知、默认值继承以及减少属性存储空间。最终结果就是依赖项属性特性。通过继承自DependencyObject类，WPF类可获得对依赖项属性的支持。
+
 3. System.Windows.Media.Visual类
 4. System.Windows.UIElement类
 5. System.Windows.FrameworkElement类
