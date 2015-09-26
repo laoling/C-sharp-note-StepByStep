@@ -128,22 +128,49 @@ WPF使用多层体系结构。
 	以及 System.Windows.Media）。唯一例外是由System.Windows.Forms
 	开头的命名空间，它们是Windows窗体工具包的一部分。
 
-1. System.Threading.DispatcherObject类
+1. **System.Threading.DispatcherObject类**
 
 	WPF应用程序使用为人熟知的单线程亲和模型（STA），这意味着整个用户界面由单个线程拥有。从另一个线程与用户界面元素进行交互是不安全的。为方便使用此模型，每个WPF应用程序由协调消息的调度程序管理。通过继承自DispatcherObject类，用户界面中的每个元素都可以检查代码是否在正确的线程上运行，并能通过访问调度程序为用户界面线程封送代码。
 
-2. System.Windows.DependencyObject类
+2. **System.Windows.DependencyObject类**
 
 	在WPF中，主要通过属性与屏幕上的元素进行交互。在早期设计阶段，WPF的设计者决定创建一个更加强大的属性模型，该模型支持许多特性，例如更改通知、默认值继承以及减少属性存储空间。最终结果就是依赖项属性特性。通过继承自DependencyObject类，WPF类可获得对依赖项属性的支持。
 
-3. System.Windows.Media.Visual类
-4. System.Windows.UIElement类
-5. System.Windows.FrameworkElement类
-6. System.Windows.Shapes.Shape类
-7. System.Windows.Controls.Control类
-8. System.Windows.Controls.ContentControl类
-9. System.Windows.Controls.ItemsControl类
-10. System.Windows.Controls.Panel类
+3. **System.Windows.Media.Visual类**
+
+	在WPF中窗口显示的每个元素本质上都是Visual对象。可将Visual类视为绘图对象。其中封装了绘图指令、如何执行绘图的附加细节以及基本功能。Visual类还在托管的WPF库和渲染桌面的milcore.dll程序集之间提供了链接。任何继承自Visual的类都能在窗口上显示出来。
+
+4. **System.Windows.UIElement类**
+
+	UIElement类增加了对WPF本质特征的支持，如布局、输入、焦点和事件。例如这里定义两个步骤的测量和排列布局过程。在该类中，原始的鼠标单击和按键操作被转换为更有用的事件，如MouseEnter事件。与属性类似，WPF实现了增强的成为路由事件的事件路由系统。最后，UIElement类中还添加了对命令的支持。
+
+5. **System.Windows.FrameworkElement类**
+
+	FrameworkElement类是WPF核心继承树中的最后一站。该类实现了一些全部由UIElement类定义的成员。例如，UIElement类为WPF布局系统设置了基础，但FrameworkElement类提供了支持它的重要属性（如HorizontalAlignment和Margin属性）。UIElement类还添加了对数据绑定、动画以及样式等核心特性的支持。
+
+6. **System.Windows.Shapes.Shape类**
+
+	基本的形状类（如Rectangle类、Polygon类、Ellipse类、Line类以及Path类）都继承自该类。可将这些形状类与更传统的Windows小组件结合使用。
+
+7. **System.Windows.Controls.Control类**
+
+	控件（Control）是可与用户进行交互的元素。控件显示包括TextBox类、Button类和ListBox类等。Control类为设置字体以及前景色与背景色提供了附加属性。但最令人感兴趣的细节是模板支持，通过模板支持，可使用自定义风格的绘图替换控件的标准外观。
+
+8. **System.Windows.Controls.ContentControl类**
+
+	ContentControl类是所有具有单一内容的控件的基类，包括简单的标签乃至窗口的所有内容。该模型给人印象最深刻的部分是：控件中的单一内容可以是普通字符串乃至具有其他形状和控件组合的布局面板。
+
+9. **System.Windows.Controls.ItemsControl类**
+
+	ItemsControl类是所有显示选项集合的控件的基类，如ListBox和TreeView控件。列表控件十分灵活——例如使用ItemsControl类的内置特征，可将简单的ListBox控件变换成单选按钮列表、复选框控件列表、平铺的图像或是您所选择的完全不同的元素组合。
+
+10. **System.Windows.Controls.Panel类**
+
+	Panel类是所有布局容器的基类，布局容器是可包含一个或多个子元素、并按特定规则对子元素进行排列的元素。这些容器是WPF布局系统的基础，要以最富有吸引力、最灵活的方式安排内容，使用这些容器是关键所在。
+
+注意：在Windows窗体编程中，窗体中的每个可视化项都称为控件。在WPF中，情况不再如此，可视化内容元素被称为元素（element），只有部分元素是控件：控件是那些能够接收焦点并能与用户进行交互的元素。
+
+更令人费解的是，许多元素是在System.Windows.Controls名称空间中定义的，但它们并不是继承自System.Windows.Controls.Control类，并且不被认为是控件。Panel类便是其中一例。
 
 ### 5、WPF4.5
 
