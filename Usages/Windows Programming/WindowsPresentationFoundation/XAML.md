@@ -44,7 +44,45 @@ XAML还包括如下几个子集：
 
 #### 1.3 XAML编译
 
+WPF的创建者知道，XAML不仅要能够解决设计协作问题，它还需要快速运行。尽管基于XML的格式可以很灵活并且很容易地迁移到其他工具和平台，但它们未必是最有效的选择，XML的设计目标是具有逻辑性、易读而且简单，没有被压缩。
+
+WPF使用BAML（Binary Application Markup Language二进制应用程序标记语言）来克服这个缺点。BAML并非新事物，它实际上就是XAML的二进制表示。当在Visual Studio中编译WPF应用程序时，所有XAML文件都被转换为BAML，这些BAML然后作为资源被嵌入到最终的DLL或EXE程序集中。BAML是标记化的，这意味着较长的XAML被较短的标记替代。BAML不仅明显小一些，还对其进行了优化，从而使它在运行时能够更快的解析。
+
+大多数开发人员不必考虑XAML向BAML的转换，因为编译器会在后台执行这项工作。但也可以使用未经编译的XAML，这对于需要即时提供一些用户界面的情况可能是有意义的。
+
 ## 2、XAML基础 ##
+
+一旦理解了一些基本规则，XAML标准是非常简单的：
+
+* XAML文档中的每个元素都映射为.NET类的一个实例。元素的名称也完全对应于类名。例如，元素`<Button>`指示WPF创建Button对象。
+* 与所有XML文档一样，可在一个元素中嵌套另一个元素。您在后面将看到，XAML让每个类灵活地决定如何处理嵌套。但嵌套通常是一种表示包含的方法——换句话说，如果在一个Grid元素中发现一个Button元素，那么用户界面可能包括一个在其内部包含一个Button元素的Grid元素。
+* 可通过特性（attribute）设置每个类的属性（Property）。但在某些情况下，特性不足以完成这项工作。对于这类情况，需要通过特殊的语法使用嵌套的标签（tag）。
+
+一个新的空白窗口：
+
+```xml
+<window x:Class="WindowsApplication1.Window1"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns="http://schemas.mrcrosoft.com/winfx/2006/xaml"
+	Title="Window1" Height="300" Width="300">
+	<Grid>
+	</Grid>
+</window>
+```
+
+该文档仅包含两个元素——顶级的Window元素以及一个Grid元素，Window元素代表整个窗口，在Grid元素中可以放置所有控件。尽管可使用任何顶级元素，但是WPF应用程序只使用以下几个元素作为顶级元素：
+
+* Window元素
+* Page元素（与Window元素类似，但它用于可导航的应用程序）
+* Application元素（该元素定义应用程序资源和启动设置）
+
+与在所有XML文档中一样，XAML文档中只能用一个顶级元素。上面的代码中，意味着只要使用`</window>`标签关闭了Window元素，文档就结束了。在后面就不能再有任何内容了。
+
+查看Window元素的开始标签，将发现几个有趣的特性，包括一个类名和两个XML名称空间。还会发现三个属性，如下所示：
+
+	Title="Window1" Height="300" Width="300"
+
+每个特性对应Window类的一个单独属性。总之，这告诉我们WPF创建标题为Window1的窗口，并使窗口的大小为300X300单位。
 
 #### 2.1 XAML名称空间
 
