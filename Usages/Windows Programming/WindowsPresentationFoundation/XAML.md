@@ -107,6 +107,67 @@ xmlns特性是XML中一个特殊特性，它专门用来声明名称空间。这
 
 #### 2.2 XAML代码隐藏类
 
+可通过XAML构造用户界面，但为了使应用程序具有一定的功能，就需要用于连接包含应用程序代码的事件处理程序的方法。XAML通过使用如下所示的Class特性简化了这个问题：
+
+```xml
+<Window x:Class="WindowsApplication1.Window1"
+```
+
+在XAML名称空间的Class特性之前放置了名称空间前缀x，这意味着这是XAML语言中更通用的部分。实际上，Class特性告诉XAML解析器用指定的名称生成一个新类。该类继承自由XML元素命名的类。换句话说，该例创建了一个名为Window1的新类，该类继承自Window基类。
+
+Window1类是编译时自动生成的，您可以提供Window1的部分类，该部分类会与自动生成的那部分合并在一起。您提供的部分类正是包含事件处理程序代码的理想容器。
+
+Visual Studio会自动帮助您创建可以放置事件处理代码的部分类。例如如果创建一个名为WindowsApplication1的应用程序，该应用程序包含名为Window1的窗口，Visual Studio将首先提供基本的类框架：
+
+```csharp
+namespace WindowsApplication1
+{
+	///<summary>
+	///Interaction logic for Window1.xaml
+	///</summary>
+	public partial class Window1 : Window
+	{
+		public Window1()
+		{
+			InitializeComponent();
+		}
+	}
+}
+```
+
+在编译应用程序时，定义用户界面的XAML被转换为CLR类型声明，这些类型声明与代码隐藏类文件（如Window1.xaml.cs）中的逻辑代码融合到一起，形成单一的单元。
+
+**1、InitializeComponent()方法**
+
+现在，Window1类尚不具有任何真正的功能。然而，它确实包含了一个非常重要的细节——默认构造函数，当创建类的一个实例时，该构造函数调用InitializeComponent()方法。
+
+注意：InitializeComponent()方法在WPF中扮演着重要角色。因此，永远不要删除窗口构造函数中的InitializeComponent()调用。同样，如果为窗口类添加另一个构造函数，也要确保调用InitializeComponent()方法。
+
+InitializeComponent()方法在源代码中不可见，因为它是在编译应用程序时自动生成的。本质上，InitializeComponent()方法的所有工作就是调用System.Windows.Application类的LoadComponent()方法。LoadComponent()方法从程序集中提取BAML，并用它来构建用户界面。当解析BAML时，它会创建每个控件对象，设置其属性，并关联所有事件处理程序。
+
+**2、命名元素**
+
+还有一个需要考虑的细节。在代码隐藏类中，经常希望通过代码来操作控件。例如，可能需要读取或修改属性，或自由地关联以及断开事件处理程序。为达到此目的，控件必须包含XAML Name特性。在上面的示例中。Grid控件没有包含Name特性，所有不能在代码隐藏文件对其进行操作。
+
+下面的标记演示了如何为Grid控件关联名称：
+
+```xml
+<Grid x:Name="grid1">
+</Grid>
+```
+
+可在XAML文档中手动执行这个修改，也可以在Visual Studio设计器中选择该网络，并通过属性窗口设置其Name属性。
+
+无论使用哪种方法，Name特性都会告诉XAML解析器将这样一个字段添加到为Window1类自动生成的部分：
+
+```csharp
+private System.Windows.Controls.Grid grid1;
+```
+
+该技术没有为这个简单的网格添加更多内容，但当需要从输入控件读取数值时它将变得更重要。
+
+上面显示的Name属性是XAML语言的一部分，用于帮助集成代码隐藏类。
+
 ## 3、XAML中的属性和事件 ##
 
 #### 3.1 简单属性与类型转换器
