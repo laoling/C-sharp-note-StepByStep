@@ -63,9 +63,10 @@ WPF使用BAML（Binary Application Markup Language二进制应用程序标记语
 ```xml
 <window x:Class="WindowsApplication1.Window1"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns="http://schemas.mrcrosoft.com/winfx/2006/xaml"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Window1" Height="300" Width="300">
 	<Grid>
+
 	</Grid>
 </window>
 ```
@@ -85,6 +86,24 @@ WPF使用BAML（Binary Application Markup Language二进制应用程序标记语
 每个特性对应Window类的一个单独属性。总之，这告诉我们WPF创建标题为Window1的窗口，并使窗口的大小为300X300单位。
 
 #### 2.1 XAML名称空间
+
+显然，只提供类名是不够的。XAML解析器还需要知道类位于哪个.NET名称空间。例如，在许多名称空间中可能都有Window类——Window类可能是指System.Windows.Window类，也可能是指位于第三方组件中的Window类，或您自己在应用程序中定义的Window类等。为了弄清楚实际上希望使用哪个类，XAML解析器会检查应用于元素的XML名称空间。
+
+下面是该机制的工作原理。上面显示的示例文档定义了两个名称空间：
+
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+xmlns特性是XML中一个特殊特性，它专门用来声明名称空间。这段标记声明了两个名称空间，在创建的所有WPF XAML文档中都会使用这两个名称空间：
+
+* `http://schemas.microsoft.com/winfx/2006/xaml/presentation`是WPF核心名称空间。它包含了所有的WPF类，包括用来构建用户界面的控件。在该例中，该名称空间的声明没有使用名称空间前缀，所以它成为整个文档的默认名称空间。换句话说，除非另行指明，每个元素自动位于这个名称空间。
+* `http://schemas.microsoft.com/winfx/2006/xaml`是XAML名称空间。它包含各种XAML实用特性，这些特性可影响文档的解释方式。该名称空间被映射为前缀x。这意味着可通过在元素名称前放置名称空间前缀x来使用该名称空间，例如`<x:ElementName>`。
+
+正如在前面看到的，XML名称空间的名称和任何特定的.NET名称空间都不匹配。XAML的创建者选择这种设计的原因有两个。按照约定，XML名称空间通常是URI。这些URI看起来像是在指明Web上的位置，但实际上不是。通过使用URI格式的名称空间，不同组织就基本不会无意中使用相同的名称空间创建不同的基于XML的语言。因为schemas.com域名归于Microsoft，只有Microsoft会在XML名称空间的名称中使用它。
+
+另一个原因是XAML中使用的XML名称空间和.NET名称空间不是一一对应的，如果一一对应的话，会显著增加XAML文档的复杂度。此处的问题在于，WPF包含了十几种名称空间，所有这些名称空间都以System.Windows开头。如果每个.NET名称空间都有不同的XML名称空间，那就需要为使用的每个控件指定确切的XML名称空间，这很快就会使XAML文档变得混乱不堪。所以，WPF创建人员选择了这种方法，将所有这些.NET名称空间组合到单个XML名称空间中。因为在不同的.NET名称空间中都有一部分WPF类，并且所有这些类的名称都不相同，所以这种设计是可行的。
+
+名称空间信息使得XAML解析器可找到正确的类。例如，当查找Window和Grid元素时，首先会查找默认情况下它们所在的WPF名称空间，然后查找相应的.NET名称空间，直至找到System.Windows.Window类和System.Windows.Controls.Grid类。
 
 #### 2.2 XAML代码隐藏类
 
