@@ -170,7 +170,50 @@ private System.Windows.Controls.Grid grid1;
 
 ## 3、XAML中的属性和事件 ##
 
+到目前为止，我们只考虑了一个比较单调的示例——包含一个空Grid控件的空白窗口。在继续学习之前，有必要首先介绍一个更贴近实际的包含几个控件的窗口。这个窗口包含4个控件，一个Grid控件，两个TextBox控件和一个Button控件。下面我们列出来这些标记，细节使用...代替，以便于整体描述：
+
+```xml
+<Window x:class="EightBall.Window1"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Eight Ball Answer" Height="328" Width="412">
+  <Grid Name="grid1">
+	<Grid.Background>
+	  ...
+	</Grid.Background>
+	<Grid.RowDefinitions>
+	  ...
+	</Grid.RowDefinitions>
+	<TextBox Name="txtQuestion" ...>
+	  ...
+	</TextBox>
+	<Button Name="cmdAnswer" ...>
+	  ...
+	</Button>
+	<TextBox Name="txtAnswer" ...>
+	  ...
+	</TextBox>
+  </Grid>
+</Window>
+```
+
+下面我们分析该文档的各个部分，并学习XAML的语法。
+
 #### 3.1 简单属性与类型转换器
+
+前面已经介绍了，元素的特性设置相应对象的属性。例如，我们为上面示例中的文本框设置对齐方式、页边距和字体：
+
+```xml
+<TextBox Name="txtQuestion"
+	VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+	FontFamily="Verdana" FontSize="24" Foreground="Green" ...>
+```
+
+为使上面的设置起作用，System.Windows.Controls.TextBox类必须提供以下属性：VerticalAlignment、HorizonAlignment、FontFamily、FontSize和Foreground。后面几章将介绍这些属性的具体含义。
+
+为使这个系统能够工作，XAML解析器需要执行比表面上看起来更多的工作。XML特性中的值总是纯文本字符串。但对象的属性可以是任何.NET类型。在上面的示例中，有两个属性为枚举类型（VerticalAlignment属性和HorizonAlignment属性）、一个为字符串类型（FontFamily属性）、一个整型（FontSize属性），还有一个为Brush对象（Foreground属性）。
+
+为了关联字符串值和非字符串属性，XAML解析器需要执行转换。由类型转换器执行转换，类型转换器是从.NET1.0起就已经引入的.NET基础结构的一个基本组成部分。
 
 #### 3.2 复杂属性
 
