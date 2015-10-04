@@ -242,6 +242,76 @@ private System.Windows.Controls.Grid grid1;
 
 真正起作用的重要细节是元素名中的句点。这个句点把该属性和其他类型的嵌套内容区分开来。
 
+还有一个细节，即一旦识别出想要配置的复杂属性，该如何设置呢？
+
+这里有一个技巧：可在嵌套元素内部添加其他标签来实例化特定的类。在上面例子中，用渐变颜色填充背景。为了定义所需的渐变颜色，需要创建LinearGradientBrush对象。
+
+根据XAML规则，可使用名为LinearGradientBrush的元素创建LinearGradientBrush对象：
+
+```xml
+<Grid Name="grad1">
+  <Grid.Background>
+	<LinearGradientBrush>
+	<LinearGradientBrush>
+  </Grid.Background>
+  ...
+</Grid>
+```
+
+LinearGradientBrush类是WPF名称空间集合中的一部分，所以可为标签继续使用默认的XML名称空间。
+
+但是，只是创建LinearGradientBrush对象还不够——还需要为其指定渐变的颜色。通过使用GradientStop对象的集合填充LinearGradientBrush.GradientStops属性可完成这一任务。同样的，由于GradientStops属性太复杂，因此不能通过一个简单的特性值设置该属性。需要该用属性元素语法：
+
+```xml
+<Grid Name="grad1">
+  <Grid.Background>
+	<LinearGradientBrush>
+	  <LinearGradientBrush.GradientStops>
+	  </LinearGradientBrush.GradientStops>
+	<LinearGradientBrush>
+  </Grid.Background>
+  ...
+</Grid>
+```
+
+最后，可以使用一系列GradientStop对象填充GradientStops集合。每个GradientStop对象都有Offset和Color属性。可使用普通的属性——特性语法提供这两个值：
+
+```xml
+<Grid Name="grad1">
+  <Grid.Background>
+	<LinearGradientBrush>
+	  <LinearGradientBrush.GradientStops>
+		<GradientStop Offset="0.00" Color="Red" />
+		<GradientStop Offset="0.50" Color="Indigo" />
+		<GradientStop Offset="1.00" Color="Violet" />
+	  </LinearGradientBrush.GradientStops>
+	<LinearGradientBrush>
+  </Grid.Background>
+  ...
+</Grid>
+```
+
+任何XAML标签集合都可以用一系列执行相同任务的代码语句代替。上面显示的使用所选的渐变填充背景的标签，与以下代码是等价的：
+
+```csharp
+LinearGradientBrush brush = new LinearGradientBrush();
+
+GradientStop gradientStop1 = new GradientStop();
+gradientStop1.Offset = 0;
+gradientStop1.Color = Colors.Red;
+brush.GradientStops.Add(gradientStop1);
+
+GradientStop gradientStop2 = new GradientStop();
+gradientStop2.Offset = 0.5;
+gradientStop2.Color = Colors.Indigo;
+brush.GradientStops.Add(gradientStop2);
+
+GradientStop gradientStop3 = new GradientStop();
+gradientStop3.Offset = 1;
+gradientStop3.Color = Colors.Violet;
+brush.GradientStops.Add(gradientStop3);
+```
+
 #### 3.3 标记扩展
 
 #### 3.4 附加属性
