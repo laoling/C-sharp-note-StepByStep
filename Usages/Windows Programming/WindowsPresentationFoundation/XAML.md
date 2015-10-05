@@ -314,6 +314,44 @@ brush.GradientStops.Add(gradientStop3);
 
 #### 3.3 标记扩展
 
+对大多数属性而言，XAML属性语法可以工作得非常好。但有些情况下，不可能硬编码属性值。例如希望将属性值设置为一个已经存在的对象，或者可能希望通过将一个属性绑定到另一个控件来动态地设置属性值。
+
+这两种情况都需要使用标记扩展——一种非常规的方式设置属性的专门语法。
+
+标记扩展可用于嵌套标签或XAML特性中（用于XML特性的情况更常见）。当用在特性中时，它们总是被花括号{}包围起来。例如：
+
+下面的标记演示了如何使用标记扩展，它允许引用另一个类中的静态属性
+
+```xml
+<Button ... Foreground="{x:Static SystemColors.ActiveCaptionBrush}" >
+```
+
+标记扩展使用{标记扩展类 参数}语法。在上面的示例中，标记扩展是StaticExtension类，根据约定，在引用扩展类时可以省略最后一个单词Extension。x前缀指示在XAML名称空间中查找StaticExtension类。还有一些标记扩展是WPF名称空间的一部分，它们不需要x前缀。
+
+所有的标记扩展都由继承自System.Windows.Markup.MarkupExtension基类的类实现。MarkupExtension基类十分简单——它提供了一个简单的Provide Value()方法来获取所期望的数值。
+
+换句话说，当XAML解析器遇到上述语句时，它将创建StaticExtension类的一个实例（传递字符串SystemColors.ActiveCaptionBrush作为构造函数的参数），然后调用ProvideValue()方法获取SystemColors.ActiveCaptionBrush静态属性返回的对象。最后使用检索的对象设置cmdAnswer按钮的Foreground属性。
+
+这段XAML的最终结果与下面的相同：
+
+```csharp
+cmdAnswer.Foreground = SystemColors.ActiveCaptionBrush;
+```
+
+因为扩展标记映射为类，所以它们也可用作嵌套属性。例如可以像下面这样为Button.Foreground属性使用StaticExtension标记扩展：
+
+```xml
+<Button ...>
+  <Button.Foreground>
+	<x:Static Member="SystemColors.ActiveCaptionBrush"></x:Static>
+  </Button.Foreground>
+</Button>
+```
+
+根据标记扩展的复杂程度，以及想要设置的属性数量，这种语法有时更简单。
+
+和大多数标记扩展一样，StaticExtension需要在运行时赋值，因为只有在运行时才能确定当前的系统颜色。一些标记扩展可在编译时评估。这些扩展包括NullExtension（该扩展构造表示.NET类型的对象）。
+
 #### 3.4 附加属性
 
 #### 3.5 嵌套元素
