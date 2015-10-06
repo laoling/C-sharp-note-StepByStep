@@ -354,6 +354,48 @@ cmdAnswer.Foreground = SystemColors.ActiveCaptionBrush;
 
 #### 3.4 附加属性
 
+除了普通属性外，XAML还包括附加属性的概念——附加属性是可用于多个控件但在另一个类中定义的属性。在WPF中，附加属性常用于控件布局。
+
+下面解释附加属性的工作原理。每个控件都有各自固定的属性。当在容器中放置控件时，根据容器的类型控件会获得额外特征。使用附加属性设置这些附加的细节。
+
+附加属性始终使用包含两个部分的命名形式：定义类型.属性名。这种包含两部分的命名语法使XAML解析器能够区分开普通属性和附加属性。
+
+在上面示例中，我们通过附加属性在网格的每一行中放置各个控件：
+
+```xml
+<TextBox ... Grid.Row="0">
+  [Place question here.]
+</TextBox>
+
+<Button ... Grid.Row="1">
+  Ask the Eight Ball
+</Button>
+
+<TextBox ... Grid.Row="2">
+  [Answer will appear here.]
+</TextBox>
+```
+
+附加属性根本不是真正的属性。它们实际上被转换为方法调用。XAML解析器采用以下形式调用静态方法：*DefiningType.SetPropertyName()*。在上面的XAML中，定义类型是Grid类，并且属性是Row，所以解析器调用Grid.SetRow()方法。
+
+当调用SetPropertyName()方法时，解析器传递两个参数：被修改的对象以及指定的属性值。例如当为TextBox控件设置Grid.Row属性时，XAML解析器执行下面的代码：
+
+```csharp
+Grid.SetRow(txtQuestion, 0);
+```
+
+这种方式隐藏了实际发生的操作，使用起来非常方便。乍一看，这些代码好像将行号保存在Grid对象中。但行号实际上保存在应用它的对象中——对于上面的示例，就是TextBox对象。
+
+这种技巧之所以能够奏效，是因为与其他所以的WPF控件一样，TextBox控件继承自DependencyObject基类。
+
+实际上，GridSetRow()方法是和DependencyObject.SetValue()方法调用等价的简化操作。如下所示：
+
+```csharp
+txtQuestion.SetValue(Grid.Rowproperty, 0);
+```
+
+附加属性是WPF的核心要素。他们充当通用的可扩展系统。另一个选择是将该属性作为基类的一部分，但这样做很复杂。因为只有在特定情况下，有些属性才有意义，如果它们作为基类的一部分，不仅会使公共接口变得十分杂乱，而且也不能添加需要新属性的容器。
+
 #### 3.5 嵌套元素
 
 #### 3.6 特殊字符与空白
