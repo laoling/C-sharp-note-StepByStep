@@ -398,6 +398,26 @@ txtQuestion.SetValue(Grid.Rowproperty, 0);
 
 #### 3.5 嵌套元素
 
+正如您所看到的，XAML文档被排列成一颗巨大的嵌套的元素树。在当前示例中，Window元素包含Grid元素，Grid元素又包含TextBox元素和Button元素。
+
+XAML让每个元素决定如何处理嵌套元素。这种交互使用下面三种机制中的一种进行中转，而且求值的顺序也是下面列出这三种机制的顺序：
+
+* 如果父元素实现了IList接口，解析器将调用IList.Add()方法，并且为该方法传入子元素作为参数。
+* 如果父元素实现了IDictionary接口，解析器将调用IDictionary.Add()方法，并且为该方法传递子元素作为参数。当使用字典集合时，还必须设置x:Key特性以便为每个条目指定键名。
+* 如果父元素使用ContentProperty特性进行修饰，解析器将使用子元素设置对应的属性。
+
+例如，您已经在前面的示例中看到LinearGradientBrush画刷如何使用下面所示的语法，从而包含GradientStop对象集合：
+
+```xml
+<LinearGradientBrush>
+  <LinearGradientBrush.GradientStops>
+	<GradientStop Offset="0.00" Color="Red" />
+	<GradientStop Offset="0.50" Color="Indigo" />
+	<GradientStop Offset="1.00" Color="Violet" />
+  </LinearGradientBrush.GradientStops>
+<LinearGradientBrush>
+```
+
 #### 3.6 特殊字符与空白
 
 #### 3.7 事件
