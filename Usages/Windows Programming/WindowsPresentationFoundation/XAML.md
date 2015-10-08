@@ -418,7 +418,55 @@ XAML让每个元素决定如何处理嵌套元素。这种交互使用下面三�
 <LinearGradientBrush>
 ```
 
+因为包含一个句点，所以XAML解析器知道LinearGradientBrush.GradientStops是复杂属性。但它需要以稍有不同的方式处理内部的标签（即三个GradientStop元素）。在这个示例中，解析器知道GradientStops属性返回一个GradientStopCollection类实现了IList接口。因此，解析器假定（也正是如此）应当使用IList.Add()方法将每个GradientStop对象添加到集合中：
+
+```csharp
+GradientStop gradientStop1 = new GradientStop();
+gradientStop1.Offset = 0;
+gradientStop1.Color = Colors.Red;
+IList list = brush.GradientStops;
+list.Add(gradientStop1);
+```
+
+有些属性可支持多种类型的集合。在这种情况下，需要添加一个标签来指定集合类，如下所示：
+
+```xml
+<LinearGradientBrush>
+  <LinearGradientBrush.GradientStops>
+	<GradientStopCollection>
+	  <GradientStop Offset="0.00" Color="Red" />
+	  <GradientStop Offset="0.50" Color="Indigo" />
+	  <GradientStop Offset="1.00" Color="Violet" />
+	</GradientStopCollection>
+  </LinearGradientBrush.GradientStops>
+<LinearGradientBrush>
+```
+
+嵌套的内容并非总是指定为集合。前面有个主体Grid元素。其中各个标签都没有包含句点，因此并未对应复杂属性。而且，Grid控件也不是集合，所以它也就没有实现IList或IDictionary接口。Grid控件支持ContentProperty特性，该特性指出应当接收任意嵌套内容的属性。从技术角度看，ContentProperty特性被应用于Panel类，而Grid类继承自Panel类。
+
+XAML解析器根据是否是集合属性采用不同方式处理内容属性。
+
+WPF中经常使用ContentProperty特性。该特性不仅用于容器控件和那些包含可视化条目集合的控件，也用于包含单一内容的控件。
+
 #### 3.6 特殊字符与空白
+
+XAML受到XML规则的限制。例如，XML特别关注一些特殊字符，如&、<和>。如果试图使用这些字符设置元素的内容，将会遇到麻烦，因为XAML解析器认为您正在处理其他事情——例如创建嵌套的元素。
+
+例如在`<Click me>`中，解析器会认为你正在试图创建一个名为Click，并且带有文本的元素。解决的方法是用实体引用代替那些特殊字符。常用字符实体我这里就不再写了。
+
+注意，只有当使用特性设置属性值时，才需要使用引号字符实体，因为引号用于指示特性值的开始和结束。
+
+上面的例子我们可以写成这样：`&lt;Click me&gt;`
+
+当XAML解析器遇到这些标记时，它能正确地理解到您希望添加的文本，而且解析器为属性传递具有相应内容的字符串，字符串内容将包含完整的尖括号。
+
+特殊字符并非是使用XAML的唯一障碍。另一个问题是空白的处理。默认情况下，XAML折叠所有空白，这意味着包含空格、Tab键以及硬回车的长字符串将被转换为单个空格。而且，如果在元素内容之前或之后添加空白，将完全忽略这个空格。
+
+我们有时使用硬回车分离字符，用Tab字符使标记更加清晰易读。但有时这并不是所期望的结果。
+
+比如有时希望在按钮文本中包含一系列空格。在这种情况下，需要为元素使用xml:space="preserve"特性。
+
+xml:space特性是XML标准的一部分，是一个要么包含全部、要么什么都不包括的设置。一旦使用了该设置，元素内的所有空白字符都将被保留。
 
 #### 3.7 事件
 
