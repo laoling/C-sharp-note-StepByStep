@@ -468,7 +468,39 @@ XAML受到XML规则的限制。例如，XML特别关注一些特殊字符，如&
 
 xml:space特性是XML标准的一部分，是一个要么包含全部、要么什么都不包括的设置。一旦使用了该设置，元素内的所有空白字符都将被保留。
 
+如果只想保留内部的空格，那么需要使用不清晰的标记。这样的技巧，确保在开始符号>和具体内容之间，以及具体内容和结束内符号<之间没有空白。
+
+同样，该问题只存在于XAML标记中。如果通过代码设置文本框中的文本，所有空格都将被使用。
+
 #### 3.7 事件
+
+到目前，介绍的所有特性都被映射为属性。然而，特性也可用于关联事件处理程序。用于关联事件处理程序的语法为：事件名="事件处理程序方法名"。
+
+例如，Button控件提供了Click事件。可使用如下所示的标记关联事件处理程序：
+
+```xml
+<Button ... Click="cmdAnswer_Click">
+```
+
+上面的标记假定在代码隐藏类中有名为cmdAnswer_Click的方法。事件处理程序必须具有正确的签名。下面是一个符合要求的方法：
+
+```csharp
+private void cmdAnswer_Click(object sender, RoutedEventArgs e)
+{
+	this.Cursor = Cursors.wait;
+
+	//Dramatic delay...
+	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(3));
+
+	AnswerGenerator generator = new AnswerGenerator();
+	txtAnswer.Text = generator.GetRandomAnswer(txtQuestion.Text);
+	this.Cursor = null;
+}
+```
+
+WPF中的事件模型和其他类型的.NET应用程序的事件模型不同。WPF事件模型依赖于事件。
+
+许多情况下，将使用特性为同一元素设置属性和关联事件处理程序。WPF总是遵循以下顺序：首先设置Name属性（如果设置的话），然后关联任意事件处理程序，最后设置其他属性。这意味着，所有对属性变化做出响应的事件处理程序在第一次设置属性时都会被触发。
 
 ## 4、使用其他名称空间中的类型 ##
 
