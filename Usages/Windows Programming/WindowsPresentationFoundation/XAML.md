@@ -504,6 +504,81 @@ WPF中的事件模型和其他类型的.NET应用程序的事件模型不同。W
 
 ## 4、使用其他名称空间中的类型 ##
 
+前面已经介绍了如何在XAML中使用WPF中的类来创建基本的用户界面。但XAML是实例化.NET对象的通用方法，包括那些位于其他非WPF名称空间以及自己创建的名称空间中的对象。
+
+创建那些不是用于XAML窗口中显示的对象听起来像是多余的，但在很多情况下这是需要的。一个例子是，当使用数据绑定并希望在某个控件上显示从其他对象提取的信息时。另一个例子是希望使用非WPF对象为WPF对象设置属性时。
+
+例如可使用数据对象填充WPF的ListBox控件。ListBox控件将调用ToString()方法来获取文本，以便在列表中显示每个条目。
+
+为使用未在WPF名称空间中定义的类，需要将.NET名称空间映射到XML名称空间。XAML有一种特殊的语法可以用于完成这一工作，该语法如下所示：
+
+```xml
+xmlns:Prefix="clr-namespace:Namespace;assemblyName"
+```
+
+通常，在XAML文档的根元素中，在紧随声明WPF和XAML名称空间的特性之后放置这个名称空间。还需要使用适当的信息填充三个部分，这三个部分的含义如下：
+
+* Prefix是希望在XAML标记中用于指示名称空间的XML前缀。例如XAML语言使用x前缀。
+* Namespace是完全限定的.NET名称空间的名称。
+* AssemblyName是声明类型的程序集，没有.dll扩展名。这个程序集必须在项目中引用。如果希望使用项目程序集，可忽略这一部分。
+
+例如：
+
+下面的标记演示了如何访问System名称空间中的基本类型，并将其映射为前缀sys：
+
+```xml
+xmlns:sys="clr-namespace:System;assembly=mscorlib"
+```
+
+下面的标记演示了如何访问当前项目在MyProject名称空间中声明的类型，并将它们映射为前缀local：
+
+```xml
+xmlns:local="clr-namespace:MyNamespace"
+```
+
+那么创建其中一个名称空间的类的实例，可使用名称空间前缀：
+
+```xml
+<local:MyObject ...></local:MyObject>
+```
+
+理想情况是，希望在XAML中使用的每个类都有无参构造函数。如果具有无参构造函数，XAML解析器就可创建对应的对象，设置其属性，并关联所提供的任何事件处理程序。XAML不支持有参构造函数，而且WPF中的所有元素都包含无参构造函数。此外，需要能够使用公共属性设置您所期望的所有细节。
+
+XAML不允许设置公共字段或调用方法。
+
+如果想要使用的类没有无参构造函数，就有些限制。如果试图创建简单的基本类型，如字符串、日期或数字类型，可提供数据的字符串表示形式作为标签中的内容。XAML解析器接着将使用类型转换器将字符串转换为合适的对象。
+
+下面列举一个使用DateTime结构的例子：
+
+```xml
+<sys:DateTime>10/30/2010 4:30 PM</sys:DateTime>
+```
+
+因为DateTime类使用TypeConverter特性将自身关联到DateTimeConverter类，所以上面的标记可以奏效。DateTimeConverter类知道这个字符串是合法的DateTime对象，并对其进行转换。当使用该技术时，不能使用特性为您的对象设置任何属性。
+
+下面我们再写个例子，将上面这些内容融合在一起：
+
+将sys前缀映射到System名称空间，并使用System名称空间创建三个DateTime对象，然后用这三个DateTime对象填充一个列表：
+
+```xml
+<Window x:Class="WindowsApplication1.Window1"
+  xmlns="http://schemes.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemes.microsoft.com/winfx/2006/xaml"
+  xmlns:sys="clr-namespace:System;assembly=macorlib">
+  <ListBox>
+	<ListBoxItem>
+	  <sys:DateTime>10/13/2013 4:30 PM</sys:DateTime>
+	</ListBoxItem>
+    <ListBoxItem>
+	  <sys:DateTime>10/29/2013 12:30 PM</sys:DateTime>
+	</ListBoxItem>
+    <ListBoxItem>
+	  <sys:DateTime>10/13/2013 2:30 PM</sys:DateTime>
+	</ListBoxItem>
+  </ListBox>
+</Window>
+```
+
 ## 5、加载和编译XAML ##
 
 #### 5.1 只使用代码
