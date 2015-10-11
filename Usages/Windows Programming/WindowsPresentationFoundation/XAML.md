@@ -593,7 +593,81 @@ XAML不允许设置公共字段或调用方法。
 
 #### 5.1 只使用代码
 
+对于编写WPF应用程序，只使用代码进行开发而不使用任何XAML的做法并不常见。只使用代码进行开发的明显缺点在于，可能会使编写WPF程序成为极端乏味的工作。WPF控件没有包含参数化的构造函数，因此即使为窗口添加一个简单按钮也需要编写几行代码。
+
+只使用代码进行开发的一个潜在优势是可以随意定制应用程序。例如，可以根据数据库记录中的信息生成充满输入控件的窗体，或可根据当前的用户酌情添加或替换控件。需要的所有内容只不过是少量的条件逻辑。相比之下，如果使用XAML文档，它们只能作为固定不变的资源嵌入到程序集中。
+
 #### 5.2 使用代码和未经编译的XAML
+
+使用XAML最有趣的方式之一是使用XamlReader类随时解析它。例如，假设开始时在一个名为Window1.xaml的文件中使用下面的XAML内容：
+
+```xml
+<DockPanel xmlns="schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <Button Name="button1" Margin="30">Please click me.</Button>
+</DockPanel>
+```
+
+在运行时，可将上面的内容加载到一个已经存在的窗口中，以便创建一个一模一样的窗口。
+
+下面是完成这一工作的代码：
+
+```csharp
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
+using System.IO;
+
+public class Window1 : Window
+{
+	private Button button1;
+
+	public Window1()
+	{
+		InitializeComponent();
+	}
+
+	public Window1(string xamlFile)
+	{
+		//Configure the form.
+		this.Width = this.Height = 285;
+		this.Left = this.Top = 100;
+		this.Title ="Dynamically Loaded XAML";
+	
+		//Get the XAML content from an external file.
+		DependencyObject rootElement;
+		using (FileStream fs = new FileStream(xamlFile, FileMode.Open))
+		{
+			rootElement = (DependencyObject)XamlReader.Load(fs);
+		}
+
+		//Insert the markup into this window
+		this.Content = rootElement;
+
+		//Find the control with the appropriate name.
+		button1 = (Button)LogicalTreeHelper.FindLogicalNode(rootElement, "button1");
+
+		//Wire up the event handler.
+		button1.Click += button1_Click;
+	}
+
+	private void button1_Click(object sender, RoutedEventArgs e)
+	{
+		button1.Content = "Thank you!";
+	}
+}
+```
+
+在此，构造函数接收XAML文件名作为参数，然后构造函数打开一个FileStream对象，并使用XamlReader.Load()方法将这个文件中的内容转换成DependencyObject对象，DependencyObject是所有WPF控件继承的基类。DependencyObject对象可放在任意类型的容器中，在这个示例中它被用作了整个窗口的内容。
+
+为操纵元素，需要在动态加载的内容中查找相应的空间对象。LogicalTreeHelper类可到达该目的，因为它具有查找一棵完整控件对象树的能力，它可以查找所需的许多层，直至找到具有指定名称的对象。然后将一个事件处理程序关联到Button.Click事件。
+
+另一种方法是使用FrameworkElement.FindName()方法。
+
+在这个示例中，Window1.xaml文件和可执行的应用程序位于同一文件夹中，并一同发布。然而，尽管该文件没有被编译为应用程序的一部分，但仍可以将其添加到VS项目中。这样可以更方便的管理文件，并使用VS设计用户界面。
+
+如果使用这种方法，确保松散的XAML文件不会像传统的XAML文件那样被编译或嵌入到项目中。将文件添加到项目后，在Solution Explorer中选中该文件，然后设置Build Action为None，并将Copy to Output Directory设置为Copy Always。
+
+显然，先将XAML编辑为BAML，再在运行时加载BAML，比动态加载XAML的效率高，当用户界面比较复杂时尤其如此。然而这种编码模式为构建动态的用户界面提供了多种可能。
 
 #### 5.3 使用代码和编译过的XAML
 
