@@ -56,6 +56,37 @@ Canvas | 使用固定坐标绝对定位元素。这个布局容器与传统Windo
 
 ## 二、使用StackPanel面板进行简单布局 ##
 
+StackPanel面板是最简单的布局容器之一。该面板简单地单行或单列中以堆栈形式放置其子元素。
+
+例如包含四个按钮的窗口：
+
+```xml
+<Window x:Class="Layout.SimpleStack"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="Layout" Height="223" Width="354">
+  <StackPanel>
+	<Label>A Button Stack</Label>
+	<Button>Button 1</Button>
+	<Button>Button 2</Button>
+	<Button>Button 3</Button>
+	<Button>Button 4</Button>
+  </StackPanel>
+</Window>
+```
+
+默认情况下，StackPanel面板按自上而下的顺序排列元素，使每个元素的高度适合它的内容。在这个示例中，这意味着标签和按钮的大小刚好足够适应它们内部包含的文本。所有元素都被拉伸到StackPanel面板的整个宽度，这也是窗口的宽度。如果加宽窗口，StackPanel面板也会变宽，并且按钮也会拉伸自身以适应变化。
+
+通过设置Orientation属性，StackPanel面板也可用于水平排列元素：
+
+```xml
+<StackPanel Orientation="Horizontal">
+```
+
+现在元素指定它们的最小宽度并拉伸至容器面板的整个高度。根据窗口的当前大小，这可能导致一些元素不适应。
+
+显然，这并未提供实际应用程序所需的灵活性。幸运的是，可使用布局属性对StackPanel面板和其他布局容器的工作方式进行精细调整，稍后会介绍。
+
 #### 2.1 布局属性
 
 #### 2.2 对齐方式
