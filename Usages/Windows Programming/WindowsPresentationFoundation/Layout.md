@@ -89,9 +89,60 @@ StackPanel面板是最简单的布局容器之一。该面板简单地单行或�
 
 #### 2.1 布局属性
 
+尽管布局由容器决定，但子元素仍有一定的决定权。实际上，布局面板支持一小组布局属性，以便与子元素结合使用，下表列出了这些布局属性。
+
+名称 | 说明
+:---:|:---:
+HorizontalAlignment | 当水平方向上有额外的空间时，该属性决定了子元素在布局容器中如何定位。可选用Center、Left、Right或Stretch等属性值
+VerticalAlignment | 当垂直方向上有额外的空间时，该属性决定了子元素在布局容器中如何定位。可选用Center、Top、Buttom或Stretch等属性值
+Margin | 该属性用于在元素的周围添加一定的空间。Margin属性是System.Windows.Thickness结构的一个实例。该结构具有分别用于为顶部、底部、左边和右边添加空间的独立组件
+MinWidth和MinHeight | 这两个属性用于设置元素的最小尺寸。如果一个元素对于其他容器来说太大，该元素将被剪裁以适合容器
+MaxWidth和MaxHeight | 这两个属性用于设置元素的最大尺寸。如果有更多可以使用的空间，那么在扩展子元素时就不会超出这一限制，即使将HorizontalAlignment和VerticalAlignment属性设置为Stretch也同样如此
+Width和Height | 这两个属性用于显式的设置元素的尺寸。这一设置会重写为HorizontalAlignment和VerticalAlignment属性设置的Stretch值。但不能超出MinWidth、MinHight、MaxWidth和MaxHeight属性设置的范围
+
+所有这些属性都是从FrameworkElement基类继承而来，所以在WPF窗口中可使用的所有图形小组件都支持这些属性。
+
+这个属性列表就像它所没有包含的属性一样值得注意。如果查找熟悉的与位置相关的属性，例如top属性、right属性以及Location属性，是不会找到它们的。这是因为大多数布局容器都使用自动布局，并未提供显式定位元素的能力。
+
 #### 2.2 对齐方式
 
+为理解这些属性的工作原理，可进一步分析StackPanel面板的示例SimpleStack。
+
+通常，对于Label控件，HorizontalAlignment属性的值默认为Left；对于Button控件，HorizontalAlignment属性的值默认为Stretch。这也是为什么每个按钮的宽度被调整为整列的宽度的原因所在。但可以改变这些细节：
+
+```xml
+<StackPanel>
+   <Label HorizontalAlignment="Center">A Button Stack</Label>
+   <Button HorizontalAlignment="Left">Button 1</Button>
+   <Button HorizontalAlignment="Right">Button 2</Button>
+   <Button>Button 3</Button>
+   <Button>Button 4</Button>
+</StackPanel>
+```
+
+这样，显式结果前面两个按钮的尺寸是它们应当具有的最小尺寸，并进行了对齐。而底部的两个按钮被拉伸至整个StackPanel面板的高度。如果改变窗口的尺寸，就会发现标签保持在中间位置，而前面两个按钮分别被粘贴到两边。
+
 #### 2.3 边距
+
+在SimpleStack示例中，当前情况下存在一个明显的问题。设计良好的窗口不只是包含元素——还应在元素之间包含一定的额外空间。为了添加额外的空间并使StackPanel面板中的按钮不那么紧密，可为控件设置边距。
+
+当设置边距时，可为所有边设置相同的宽度，如下所示：
+
+```xml
+<Button Margin="5">Button 3</Button>
+```
+
+相应的，也可为控件的每个边以左、上、右、下的顺序设置不同的边距：
+
+```xml
+<Button Margin="5,10,5,10">Button 3</Button>
+```
+
+在代码中，使用Thickness结构来设置边距：
+
+```csharp
+cmd.Margin = new Thickness(5);
+```
 
 #### 2.4 最小尺寸、最大尺寸以及显示的设置尺寸
 
