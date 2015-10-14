@@ -146,7 +146,55 @@ cmd.Margin = new Thickness(5);
 
 #### 2.4 最小尺寸、最大尺寸以及显示的设置尺寸
 
+最后，每个元素都提供了Height和Width属性，用于显式地指定元素大小。但这种设置一般不是一个好主意。相反，如有必要，应当使用最大尺寸和最小尺寸属性，将控件限制在正确范围内。
+
+例如，SimpleStack示例中你可能决定拉伸StackPanel容器中的按钮，使其适合StackPanel，但其宽度不能超过200单位，也不能小于100单位（默认情况下最初按钮的最小宽度是75单位）。下面是所需的标记：
+
+```xml
+<StackPanel Margin="3">
+   <Label Margin="3" HorizontalAlignment="Center">A Button Stack</Label>
+   <Button Margin="3" MaxWidth="200" MinWidth="100">Button 1</Button>
+   <Button Margin="3" MaxWidth="200" MinWidth="100">Button 2</Button>
+   <Button Margin="3" MaxWidth="200" MinWidth="100">Button 3</Button>
+   <Button Margin="3" MaxWidth="200" MinWidth="100">Button 4</Button>
+</StackPanel>
+```
+
+当StackPanel调整按钮的尺寸时，需要考虑以下几部分信息：
+
+* **最小尺寸。**每个按钮的尺寸始终不能小于最小尺寸。
+* **最大尺寸。**每个按钮的尺寸始终不能超过最大尺寸。
+* **内容。**如果按钮中的内容需要更大的宽度，StackPanel容器会尝试扩展按钮。
+* **容器尺寸。**如果最小宽度大于StackPanel面板的宽度，按钮的一部分将被剪裁掉。否则，不允许按钮比StackPanel面板更宽，即使不能适合按钮表面的所有文本也同样如此。
+* **水平对齐方式。**因为默认情况下按钮的HorizontalAlignment属性值设置为Stretch，所有StackPanel将尝试放大按钮以占满StackPanel面板的整个宽度。
+
+理解这个过程的关键在于，要认识到最小尺寸和最大尺寸设置了绝对界限。在这些界限内，StackPanel面板尝试反应按钮所期望的尺寸以及对齐方式的设置。
+
 #### 2.5 Border控件
+
+Border控件不是布局面板，而是非常便于使用的元素，经常与布局面板一起使用。所以，在继续介绍其他布局面板之前，我们先介绍一下Border控件是有意义的。
+
+Border类非常简单。它只能包含一段嵌套内容，并为其添加背景或在其周围添加边框。为了深入地理解Border控件，只需要掌握下表中列出的属性就可以了。
+
+名称 | 说明
+:---:|:---
+Background | 使用Brush对象设置边框中所有内容后面的背景。可使用固定颜色背景，也可使用其他更特殊的背景
+BorderBrush和BorderThickness | 使用Brush对象设置位于Border对象边缘的边框的颜色，并设置边框的宽度。为显示边框，必须设置这两个属性
+CornerRadius | 该属性可使边框具有雅致的圆角。CornerRadius的值越大，圆角效果就越明显
+Padding | 该属性在边框和内部的内容之间添加空间（与此相对，Margin属性在边框之外添加空间）
+
+下面是一个具有轻微圆角效果的简单边框，该边框位于一组按钮的周围，这组按钮包含在一个StackPanel面板中：
+
+```xml
+<Border Margin="5" Padding="5" Background="LightYellow" 
+BorderBrush="SteelBlue" BorderThickness="3,5,3,5" CornerRadius="3" VerticalAlignment="Top">
+  <StackPanel>
+	<Button Margin="3">One</Button>
+	<Button Margin="3">Two</Button>
+	<Button Margin="3">Three</Button>
+  </StackPanel>
+</Border>
+```
 
 ## 三、WrapPanel和DockPanel面板 ##
 
