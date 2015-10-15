@@ -198,7 +198,15 @@ BorderBrush="SteelBlue" BorderThickness="3,5,3,5" CornerRadius="3" VerticalAlign
 
 ## 三、WrapPanel和DockPanel面板 ##
 
+显然，只使用StackPanel面板还不能帮助您创建出实用的用户界面。要设计出最终使用的用户界面，StackPanel面板还需要与其他更强大的布局容器协作。只有这样才能组装成完整的窗口。
+
+最复杂的布局容器是Grid面板。在介绍Grid之前，有必要首先看一下WrapPanel和DockPanel面板，它们是WPF提供的两个更简单的布局容器。这两个布局容器通过不同的布局行为对StackPanel面板进行补充。
+
 #### 3.1 WrapPanel面板
+
+WrapPanel面板在可能的空间中，以一次一行或一列的方式布置控件。默认情况下，WrapPanel.Orientation属性设置为Horizontal；控件从左向右进行排列，再在下一行中排列。但可将WrapPanel.Orientation属性设置为Vertical，从而在多个列中放置元素。
+
+提示：与StackPanel面板类似，WrapPanel面板实际上主要用来控制用户界面中一小部分的布局细节，并非用于控制整个窗口布局。例如可能使用WrapPanel面板以类似工具控件的方式将所有按钮保持在一起。
 
 #### 3.2 DockPanel面板
 
