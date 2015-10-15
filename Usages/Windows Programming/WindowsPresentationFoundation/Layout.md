@@ -208,7 +208,47 @@ WrapPanel面板在可能的空间中，以一次一行或一列的方式布置�
 
 提示：与StackPanel面板类似，WrapPanel面板实际上主要用来控制用户界面中一小部分的布局细节，并非用于控制整个窗口布局。例如可能使用WrapPanel面板以类似工具控件的方式将所有按钮保持在一起。
 
+下面的示例中定义了一系列具有不同对齐方式的按钮，并将这些按钮放到一个WrapPanel面板中：
+
+```xml
+<WrapPanel Margin="3">
+  <Button VerticalAlignment="Top">Top Button</Button>
+  <Button MinHeight="60">Tall Button 2</Button>
+  <Button VerticalAlignment="Bottom">Bottom Buttton</Button>
+  <Button>Stretch Button</Button>
+  <Button VerticalAlignment="Center">Centered Button</Button>
+</WrapPanel>
+```
+
+正如这个示例，WrapPanel面板水平地创建了一系列假想的行，每一行的高度都被设置为所包含元素中最高元素的高度。其他控件能被拉伸以适应这一高度，或根据VerticalAlignment属性的设置进行对齐。因此，在该行中不关心各个按钮的VerticalAlignment属性的设置。
+
+注意：WrapPanel面板是唯一一个不能通过灵活使用Grid面板代替的面板。
+
 #### 3.2 DockPanel面板
+
+DockPanel面板是更有趣的布局选项，它沿着一条外边缘来拉伸所包含的控件。理解该面板最简便的方法是，考虑一下位于许多Windows应用程序窗口顶部的工具栏。这些工具栏停靠到窗口顶部。与StackPanel面板类似，被停靠的元素选择它们布局的一个方面。
+
+这里很明显的问题是：子元素如何选择停靠的边？
+
+答案是通过Dock附加属性，可将该属性设置为Left、Right、Top或Bottom。放在DockPanel面板中的每个元素都会自动捕获该属性。
+
+下面的示例在DockPanel面板的每条边上都停靠一个按钮：
+
+```xml
+<DockPanel LastChildFill="True">
+  <Button DockPanel.Dock="Top">Top Button</Button>
+  <Button DockPanel.Dock="Bottom">Bottom Button</Button>
+  <Button DockPanel.Dock="Left">Left Button</Button>
+  <Button DockPanel.Dock="Right">Right Button</Button>
+  <Button>Remaining Space</Button>
+</DockPanel>
+```
+
+该示例将DockPanel面板中的LastChildFill设置为true，该设置告诉DockPanel面板使用最后一个元素占满剩余空间。
+
+显然，当停靠控件时，停靠顺序很重要。在这个示例中，顶部和底部按钮充满了DockPanel的整个边缘，这是因为这两个按钮首先被停靠。接着停靠左右按钮时，这两个按钮将位于顶部和底部之间。
+
+可将多个元素停靠到同一边缘。这种情况下，元素按标记中声明的顺序停靠到边缘。而且，如果不喜欢空间分割或拉伸行为，可修改Margin属性、HorizontalAlignment属性以及VerticalAlignment属性，就像使用StackPanel面板进行布局时所介绍的那样。
 
 #### 3.3 嵌套布局容器
 
