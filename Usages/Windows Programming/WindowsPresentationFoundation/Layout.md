@@ -282,7 +282,108 @@ DockPanel面板是更有趣的布局选项，它沿着一条外边缘来拉伸�
 
 ## 四、Grid面板 ##
 
+Grid面板是WPF中功能最强大的布局容器。很多使用其他布局控件能完成的功能，用Grid面板也能实现。Grid面板也是将窗口分割成更小区域的理想工具。
+
+实际上，由于Grid面板十分有用，因此在VS中为窗口添加新的XAML文档时，会自动添加Grid标签作为顶级容器，并嵌套在Window根元素中。
+
+Grid面板将元素分隔到不可见的行列网格中。尽管可在一个单元格中放置多个元素，但在每个单元格中只放置一个元素通常更合理。当然，在Grid单元格中的元素本身也可能是另一个容器，该容器组织它所包含的一组控件。
+
+提示：方便调试，我们可将不可见的Grid面板，通过将Grid.ShowGridLines属性设置为true，从而更清晰地观察Grid面板。这一特性并不是真正试图美化窗口，反而是为了方便调试，设计该特性旨在帮助理解Grid面板如何将其自身分割成多个小区域。
+
+需要两个步骤来创建基于Grid面板的布局。首先，选择希望使用的行和列的数量。然后，为每个包含的元素指定恰当的行和列，从而在合适的位置放置元素。
+
+Grid面板通过使用对象填充Grid.ColumnDefinitions和Grid.RowDefinitions集合来创建网格和行。例如如果确定需要两行和三行，可添加以下标签：
+
+```xml
+<Grid ShowGridLines="True">
+  <Grid.RowDefinitions>
+	<RowDefinition></RowDefinition>
+	<RowDefinition></RowDefinition>
+  </Grid.RowDefinitions>
+  <Grid.ColumnDefinitions>
+	<ColumnDefinition></ColumnDefinition>
+	<ColumnDefinition></ColumnDefinition>
+	<ColumnDefinition></ColumnDefinition>
+  </Grid.ColumnDefinitions>
+
+  ...
+</Grid>
+```
+
+正如本例演示的，在RowDefinition和ColumnDefinition元素中不必提供任何信息。如果保持他们为空，Grid面板将在所有行和列之间平均分配空间。在本例中，每个单元格的尺寸完全相同，具体取决于包含窗口的尺寸。
+
+为在单元格中放置各个元素，需要使用Row和Column附加属性。这两个属性的值都是从0开始的索引数。例如以下标记演示了如何创建Grid面板，并使用按钮填充Grid面板的部分单元格。
+
+```xml
+<Grid ShowGridLines="True">
+...
+  <Button Grid.Row="0" Grid.Column="0">Top Left</Button>
+  <Button Grid.Row="0" Grid.Column="1">Middle Left</Button>
+  <Button Grid.Row="1" Grid.Column="2">Bottom Right</Button>
+  <Button Grid.Row="1" Grid.Column="1">Bottom Middle</Button>
+</Grid>
+```
+
+每个元素必须被明确地放在对应的单元格中。可在单元格中放置多个元素，或让单元格保持为空。也可以不按顺序声明元素，正如本例中的最后两个按钮那样。但如果逐行定义控件，可使标记更清晰。
+
+此处存在例外情况。如果不指定Grid.Row属性，Grid面板会假定该属性的值为0。对于Grid.Column属性也是如此。因此，在Grid面板的第一个单元格中放置元素时可不指定这两个属性。
+
 #### 4.1 调整行和列
+
+如果Grid面板只是按照比例分配尺寸的行和列的集合，它也就没什么用处了。幸运的是，情况并非如此。为了充分发挥Grid面板的潜能，可更改每一行和每一列的尺寸设置方式。
+
+Grid面板支持以下三种设置尺寸的方式：
+
+* 绝对设置尺寸方式。设置设备无关单位准确地设置尺寸。这是最无用的策略，因为这种策略不够灵活，难以适应内容大小和容器大小的改变，而且更难以处理本地化。
+* 自动设置尺寸方式。每行和每列的尺寸刚好满足需要。这是最有用的尺寸设置方式。
+* 按比例设置尺寸方式。按比例将空间分割到一组行和列中。这是对所有行和列的标准设置。
+
+为了获得最大的灵活性，可混合使用这三种尺寸设置方式。例如创建几个自动设置尺寸的行，然后通过按比例设置尺寸的方式让最后一行或两行充满剩余的空间，这通常是很有用的。
+
+可通过将ColumnDefinition对象的Width属性或RowDefinition对象的Height属性设置为数值来确定尺寸的设置方式。例如下面代码显示了如何设置100设备无关单位的绝对宽度：
+
+```xml
+<ColumnDefinition Width="100"></ColumnDefinition>
+```
+
+为使用自动尺寸设置方式，可使用Auto值：
+
+```xml
+<ColumnDefinition Width="Auto"></ColumnDefinition>
+```
+
+为了使用按比例尺寸设置方式，需要使用星号（*）：
+
+```xml
+<ColumnDefinition Width="*"></ColumnDefinition>
+```
+
+如果混合使用按比例尺寸设置方式和其他尺寸设置方式，就可以在剩余的任意空间按比例改变行或列的尺寸。
+
+如果希望不均匀的分割剩余空间，可指定权重，权重必须放在星号之前。例如如果有两行是按比例设置尺寸，并希望第一行的高度是第二行高度的一半，那么可以使用如下设置来分配剩余空间：
+
+```xml
+<RowDefinition Height="*"></RowDefinition>
+<RowDefinition Height="2*"></RowDefinition>
+```
+
+上面的代码告诉Grid面板，第二行的高度应是第一行高度的二倍。可使用您喜欢的任何数字来分配剩下的空间。
+
+使用这些尺寸设置方式，我们可以重现前面的示例对话框。使用顶级的Grid容器而不是使用DockPanel面板。下面是所需要的标记：
+
+```xml
+<Grid ShowGridLines="True">
+  <Grid.RowDefinition>
+	<RowDefinition Height="*"></RowDefinition>
+	<RowDefinition Height="Auto"></RowDefinition>
+  </Grid.RowDefinition>
+  <TextBox Margin="10" Grid.Row="0">This is a test.</TextBox>
+  <StackPanel Grid.Row="1" HorizontalAlignment="Right" Orientation="Horizontal">
+	<Button Margin="10,10,2,10" Padding="3">OK</Button>
+	<Button Margin="2,10,10,10" Padding="3">Cancel</Button>	
+  </StackPanel>
+</Grid>
+```
 
 #### 4.2 布局舍入
 
