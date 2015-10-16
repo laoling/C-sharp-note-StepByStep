@@ -252,6 +252,34 @@ DockPanel面板是更有趣的布局选项，它沿着一条外边缘来拉伸�
 
 #### 3.3 嵌套布局容器
 
+很少单独使用StackPanel、WrapPanel、DockPanel面板。相反，它们通常用来设置一部分用户界面的布局。例如可使用DockPanel面板在窗口的合适区域放置不同的StackPanel和WrapPanel面板容器。
+
+例如，假如希望创建一个标准对话框，在其右下角具有OK按钮和Cancel按钮，并且在窗口的剩余部分是一块较大的内容区域。在WPF中可采用几种方法完成这一布局，但最简单的方法如下，该方法使用前面介绍过的各种面板：
+
+1）创建水平StackPanel面板，用于将OK按钮和Cancel按钮放在一起。
+2）在DockPanel面板中放置StackPanel面板，将其停靠到窗口底部。
+3）将DockPanel.ListChildFill属性设置为true，以使用窗口剩余的部分填充其他内容。在此可以添加另一个布局控件，或者只添加一个普通的TextBox控件。
+4）设置边距属性，提供一定的空白空间。
+
+下面是最终标记：
+
+```xml
+<DockPanel LastChildFill="True">
+  <StackPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right"
+   Orientation="Horizontal">
+	<Button Margin="10,10,2,10" Padding="3">OK</Button>
+	<Button Margin="2,10,10,10" Padding="3">Cancel</Button>
+  </StackPanel>
+  <TextBox DockPanel.Dock="Top" Margin="10">This is a test.</TextBox>
+</DockPanel>
+```
+
+在这个示例中，Padding属性在按钮边框与内部的内容之间添加了尽量少的空间。
+
+乍一看，相对于使用坐标精确放置控件而言，这有些多余。在很多情况下确实如此。不过，设置时间固然较长，但这样做的好处是在将来可以很方便地修改用户界面。
+
+与Windows旧式的用户界面框架相比，这里使用的标记更整洁、更简单也更紧凑。如果为这个窗口添加一些样式，还可对该窗口进行进一步改进，并移除不必要的细节，从而创建真正的自适应用户界面。
+
 ## 四、Grid面板 ##
 
 #### 4.1 调整行和列
