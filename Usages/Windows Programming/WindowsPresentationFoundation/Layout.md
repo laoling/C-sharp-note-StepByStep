@@ -401,6 +401,47 @@ WPF在处理边界像素不为整数时，对微小的错位会使用反锯齿�
 
 #### 4.3 跨越行和列
 
+您已经看到如何使用Row和Column附加属性在单元格中放置元素。还可以使用另外两个附加属性使元素跨越多个单元格，这两个附加属性是RowSpan和ColumnSpan。这两个属性使用元素将会占用的行数和列数进行设置。
+
+例如，下面的按钮将占据第一行中的第一个和第二个单元格的所有空间：
+
+```xml
+<Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">Span Button</Button>
+```
+
+下面的代码通过跨越两列和两行，拉伸按钮使其占据所有4个单元格：
+
+```xml
+<Button Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">Span Button</Button>
+```
+
+通过跨越行和列可得到更有趣的效果，当需要在由分割器或更长的内容区域分开的表格结构中放置元素时，这是非常方便的。
+
+使用列跨越特征，可以只使用Grid面板重新编写前面的简单对话框示例。Grid面板将窗口分割成三列，展开文本框使其占据所有三列，并使用最后两列对齐OK按钮和Cancel按钮：
+
+```xml
+<Grid ShowGridLines="True">
+  <Grid.RowDefinition>
+	<RowDefinition Height="*"></RowDefinition>
+	<RowDefinition Height="Auto"></RowDefinition>
+  </Grid.RowDefinition>
+  <Grid.ColumnDefinition>
+	<ColumnDefinition Width="*"></RowDefinition>
+	<ColumnDefinition Width="Auto"></RowDefinition>
+	<ColumnDefinition Width="Auto"></RowDefinition>
+  </Grid.ColumnDefinition>
+  <TextBox Margin="10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">This is a test.</TextBox>  
+  <Button Margin="10,10,2,10" Padding="3" Grid.Row="1" Grid.Column="1">OK</Button>
+  <Button Margin="2,10,10,10" Padding="3" Grid.Row="1" Grid.Column="2">Cancel</Button>	
+</Grid>
+```
+
+大多数开发人员认为这种布局不清晰也不明智。列宽由窗口底部的两个按钮尺寸决定，这使得难以向已经存在的Grid结构中添加新内容。即使向这个窗口增加很少的内容，也必须创建新的列集合。
+
+正如上面显示的，当为窗口选择布局容器时，不仅关心能否得到正确的布局行为——还希望构建便于在未来维护和增强的布局结构。
+
+一条正确的经验法则是，对于一次性的布局任务，例如排列一组按钮，使用最小的布局容器。但如果需要为窗口中的多个区域使用一致的结构，对于标准化布局而言，Grid面板是必不可少的工具。
+
 #### 4.4 分割窗口
 
 #### 4.5 共享尺寸组
