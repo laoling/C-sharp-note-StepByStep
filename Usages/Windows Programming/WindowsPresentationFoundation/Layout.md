@@ -486,7 +486,28 @@ WPF在处理边界像素不为整数时，对微小的错位会使用反锯齿�
 
 #### 4.5 共享尺寸组
 
+正如前面看到的，Grid面板包含一个行列集合，可以明确的按比例确定行和列的尺寸，或根据其子元素的尺寸确定行和列的尺寸。还有另一种确定一行或一列的尺寸的方法——与其他行或列相匹配。这是通过成为共享尺寸组的特性实现的。（shared size groups）
+
+共享尺寸组的目标是保持用户界面独立部分的一致性。例如可能希望改变一列的尺寸以适应其内容，并改变另一列使其与前面一列改变后的尺寸相匹配。然而，共享尺寸组的真正优点是使独立的Grid控件具有相同的比例。
+
 #### 4.6 UniformGrid面板
+
+有一种网格不遵循前面介绍的所有原则——UniformGrid面板。与Grid面板不同，UniformGrid面板不需要预先定义的行和列。相反，通过简单的设置Rows和Columns属性来设置其尺寸。
+
+每个单元格始终具有相同的大小，因为可用的空间被均分。最后，元素根据定义的顺序被放置到适当的单元格中。UniformGrid面板中没有Row和Column附加属性，也没有空白单元格。
+
+下面举个简单的示例，该示例使用4个按钮填充UniformGrid面板：
+
+```xml
+<UniformGrid Rows="2" Column="2">
+  <Button>Top Left</Button>
+  <Button>Top Right</Button>
+  <Button>Bottom Left</Button>
+  <Button>Bottom Right</Button>
+</UniformGrid>
+```
+
+与Grid面板相比，UniformGrid面板很少使用。Grid面板是用于创建简单乃至复杂窗口布局的通用工具。UniformGrid面板是一种更特殊的布局容器，主要用于在刻板的网格中快速地布局元素。
 
 ## 五、使用Canvas面板进行基于坐标的布局 ##
 
