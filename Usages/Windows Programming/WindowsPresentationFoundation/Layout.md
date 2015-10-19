@@ -452,8 +452,37 @@ WPF在处理边界像素不为整数时，对微小的错位会使用反锯齿�
 
 * GridSplitter对象必须放在Grid单元格中。可与已经存在的内容一并放到单元格中，这时需要调整边距设置，使它们不相互重叠。更好的方法是预留一列或一行专门用于放置GridSplitter对象，并将预留行或列的Height或Width属性的值设置为Auto。
 * GridSplitter对象总是改变整行或整列的尺寸。为使GridSplitter对象的外观和行为保持一致，需要拉伸GridSplitter对象使其穿越整行或整列，而不是将其限制在单元格中。为此，可使用前面介绍的RowSpan或ColumnSpan属性。
-* 最初GridSplitter对象很小不易看到。为了使其更可用，需要为其设置最小尺寸。
-* GridSplitter对齐方式还决定了分割条是水平的还是竖直的。
+* 最初GridSplitter对象很小不易看到。为了使其更可用，需要为其设置最小尺寸。对于竖直分割条，需要将VerticalAlignment属性设置为Stretch，并将Width设置为固定值。对于水平分割条，需要设置HorizontalAlignment属性来拉伸，并将Height属性设置为固定值。
+* GridSplitter对齐方式还决定了分割条是水平的还是竖直的。对于水平分割条，需要将VerticalAlignment属性设置为Center（默认值），以指明拖动分割条改变上面行和下面行的尺寸。对于竖直分割条，需要将HorizontalAlignment属性设置为Center，以改变分割条两侧列的尺寸。
+
+下面我们写一个程序列出GridSplitter对象的细节：
+
+```xml
+<Grid>
+  <Grid.RowDefinitions>
+	<RowDefinition></RowDefinition>
+	<RowDefinition></RowDefinition>
+  </Grid.RowDefinitions>
+  <Grid.ColumnDefinitions>
+	<ColumnDefinition MinWidth="100"></ColumnDefinition>
+	<ColumnDefinition Width="Auto"></ColumnDefinition>
+	<ColumnDefinition MinWidth="50"></ColumnDefinition>
+  </Grid.ColumnDefinitions>
+
+  <Button Grid.Row="0" Grid.Column="0" Margin="3">Left</Button>
+  <Button Grid.Row="0" Grid.Column="2" Margin="3">Right</Button>
+  <Button Grid.Row="1" Grid.Column="0" Margin="3">Left</Button>
+  <Button Grid.Row="1" Grid.Column="2" Margin="3">Right</Button>
+
+  <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+   Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center"
+   ShowsPreview="False"></GridSplitter>
+</Grid>
+```
+
+此代码还包含了一处细节，在声明GridSplitter对象时，将ShowsPreview属性设置为false。因此，当把分割条从一边拖到另一边时，会立即改变列的尺寸。但是如果将此属性设置为true，当拖动分割条时就会看到一个灰色阴影跟随着鼠标指针，用于显示将在何处进行分割。并且直到释放了鼠标键之后的尺寸才改变。如果GridSplitter对象获得了焦点，也可以使用箭头键改变相应的尺寸。
+
+如果希望更大幅度的移动分割条，可以调整DragIncrement属性。如果希望控制列的最大尺寸和最小尺寸，只需要在ColumnDefinitions部分设置合适的属性。
 
 #### 4.5 共享尺寸组
 
