@@ -549,6 +549,29 @@ WPF在处理边界像素不为整数时，对微小的错位会使用反锯齿�
 
 ## 五、使用Canvas面板进行基于坐标的布局 ##
 
+到目前为止唯一尚未介绍的布局容器是Canvas面板。Canvas面板允许使用精确的坐标放置元素，如果设计数据驱动的富窗体和标准对话框，这并非好的选择；但如果需要构建其他一些不同的内容（为图形工具创建绘图表面），Canvas面板可能是个有用的工具。
+
+Canvas面板还是最轻量级的布局容器。这是因为Canvas面板没有包含任何复杂的布局逻辑，用以改变其子元素的首选尺寸。Canvas面板只是在指定的位置放置其子元素，并且其子元素具有所希望的精确尺寸。
+
+为在Canvas面板中定位元素，需要设置Canvas.Left和Canvas.Top附加属性。Canvas.Left属性设置元素左边和Canvas面板左边之间的单位数，Canvas.Top属性设置子元素顶边和Canvas面板顶边之间的单位数。同样，这些数值也是以设备无关单位设置的，当将系统DPI设置为96dpi时，设备无关单位恰好等于通常的像素。
+
+可使用Width和Height属性明确设置子元素的尺寸。与使用其他面板相比，使用Canvas面板时这种设置更普遍，因为Canvas面板没有自己的布局逻辑（并且当需要精确控制组合元素如何排列时，经常会使用Canvas面板）。如果没有设置Width和Height属性，元素会获取它所期望的尺寸——换句话说，它将变得足够大以适应其内容。
+
+下面是个包含了4个按钮的简单Canvas面板示例：
+
+```xml
+<Canvas>
+  <Button Canvas.Left="10" Canvas.Top="10">(10,10)</Button>
+  <Button Canvas.Left="120" Canvas.Top="30">(120,30)</Button>
+  <Button Canvas.Left="60" Canvas.Top="80" Width="50" Height="50">(60,80)</Button>
+  <Button Canvas.Left="70" Canvas.Top="120" Width="100" Height="50">(70,120)</Button>
+</Canvas>
+```
+
+如果改变窗口大小，Canvas面板就会拉伸以填满可用空间，但Canvas面板上的控件不会改变其尺寸和位置。Canvas面板不包含任何锚定和停靠功能，这两个功能是在Windows窗体中使用坐标布局提供的。造成该问题的部分原因是为了防止以不当目的使用Canvas面板。
+
+与其他容器一样，可在用户界面总嵌套Canvas面板。这意味着可使用Canvas面板在窗口的一部分绘制一些细节内容，而在窗口的其余部分使用更合乎标准的WPF面板。
+
 #### 5.1 Z顺序
 
 #### 5.2 linkCanvas元素
