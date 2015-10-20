@@ -490,6 +490,44 @@ WPF在处理边界像素不为整数时，对微小的错位会使用反锯齿�
 
 共享尺寸组的目标是保持用户界面独立部分的一致性。例如可能希望改变一列的尺寸以适应其内容，并改变另一列使其与前面一列改变后的尺寸相匹配。然而，共享尺寸组的真正优点是使独立的Grid控件具有相同的比例。
 
+共享的列可用于不同的网格中。同样，共享的列可占据不同的位置，从而可以在一个Grid面板中的其中一列和另一个Grid面板中另一列之间创建一种联系。显然，这些列可包含完全不同的内容。
+
+当使用共享尺寸组时，就像创建了一列（行）的定义，列（行）定义在多个地方被重复使用。这不是简单的将一列（行）复制到另外一个地方。
+
+甚至可为其中一个Grid对象添加GridSplitter。当用户改变一个Grid面板中列的尺寸时，另一个Grid面板中的共享列会同时相应的改变尺寸。
+
+可轻而易举的创建共享组。只需要使用对应的字符串设置两列的SharedSizeGroup属性即可。
+
+下面这个示例中，两列都使用了名为TextLabel的分组：
+
+```xml
+<Grid Margin="3" Background="LightYellow" ShowGridLines="True">
+  <Grid.ColumnDefinitions>
+	<ColumnDefinition Width="Auto" SharedSizeGroup="TextLabel"></ColumnDefinition>
+	<ColumnDefinition Width="Auto"></ColumnDefinition>
+	<ColumnDefinition></ColumnDefinition>
+  </Grid.ColumnDefinitions>
+
+  <Label Margin="5">A very long bit of text</Label>
+  <Label Grid.Column="1" Margin="5">More text</Label>
+  <TextBox Grid.Column="2" Margin="5">A text box</TextBox>
+</Grid>
+...
+<Grid Margin="3" Background="LightYellow" ShowGridLines="True">
+  <Grid.ColumnDefinitions>
+	<ColumnDefinition Width="Auto" SharedSizeGroup="TextLabel"></ColumnDefinition>
+	<ColumnDefinition></ColumnDefinition>
+  </Grid.ColumnDefinitions>
+
+  <Label Margin="5">Short</Label>
+  <TextBox Grid.Column="1" Margin="5">A text box</TextBox>
+</Grid>
+```
+
+还有一个细节，对于整个应用程序来说，共享尺寸组并不是全局的，因为多个窗口可能在无意间使用相同名称。可以假定共享尺寸组被限制在当前窗口，但是WPF更加严格。
+
+为了共享一个组，需要在包含具有共享列的Grid对象的容器中，在包含Grid对象之前明确地将Grid.IsSharedSizeScope附加属性设置为true。当然可以使用Grid嵌套，也可以使用不同的容器，如DockPanel或StackPanel。
+
 #### 4.6 UniformGrid面板
 
 有一种网格不遵循前面介绍的所有原则——UniformGrid面板。与Grid面板不同，UniformGrid面板不需要预先定义的行和列。相反，通过简单的设置Rows和Columns属性来设置其尺寸。
