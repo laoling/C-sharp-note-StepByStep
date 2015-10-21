@@ -589,6 +589,43 @@ Canvas面板还是最轻量级的布局容器。这是因为Canvas面板没有�
 
 如果需要通过代码来改变元素的位置，ZIndex属性是非常有用的。只需要调用Canvas.SetZIndex()方法，并传递希望修改的元素和希望使用的新ZIndex值即可。遗憾的是，并不存在BringToFront()或SendToBack()方法——要实现这一行为，需要跟踪最高和最低的ZIndex值。
 
-#### 5.2 linkCanvas元素
+#### 5.2 InkCanvas元素
+
+WPF还提供了InkCanvas元素，它与Canvas面板在某些方面是类似的。和Canvas面板一样，InkCanvas元素定义了4个附加属性（Top Left Bottom和Right），可将这4个附加属性应用于子元素，以根据坐标进行定位。然而，基本的内容区别很大——实际上，InkCanvas类不是派生自Canvas类，甚至也不是派生自Panel基类，而是直接派生自FrameworkElement类。
+
+InkCanvas元素的主要目的是用于接收手写输入。手写笔是一种在平板PC上使用的类似于钢笔的输入设备，然而InkCanvas同时也可以使用鼠标进行工作，就像使用手写笔一样。因此，用户也可以使用鼠标在InkCanvas元素上绘制线条，或者选择以及操作InkCanvas中的元素。
+
+InkCanvas元素实际上包含两个子内容集合。一个是Children集合，它保存任意元素，就像Canvas面板一样。每个子元素可根据Top、Left、Bottom、Right属性进行定位。另一个是Strokes集合，它保存System.Windows.Ink.Stroke对象，该对象表示用户在InkCanvas元素上绘制的图形输入。用户绘制的每条直线或曲线都变成独立的Stroke对象。
+
+比如一个关于给照片进行标注的示例：
+
+```xml
+<InkCanvas Name="inkCanvas" Background="LightYellow" EditingMode="Ink">
+  <Image Source="office.jpg" InkCanvas.Top="10" InkCanvas.Left="10" 
+   Width="287" Height="319"></Image>
+</InkCanvas>
+```
+
+根据为InkCanvas.EditingMode属性设置的值，可以采用截然不同的方式使用InkCanvas元素，下面列出了所有选项。
+
+名称 | 说明
+:---:|:---
+Ink | InkCanvas元素允许用户绘制批注，这是默认模式，当用户用鼠标或手写笔绘图时，会绘制画笔
+GestureOnly | InkCanvas元素不允许用户绘制笔画批注，但会关注预先定义的特定姿势。能识别的姿势的完整列表由System.Windows.Ink.ApplicationGesture枚举给出
+InkAndGesture | InkCanvas元素允许用户绘制笔画批注，也可以识别预先定义的姿势
+EraseByStroke | 当单击笔画时，InkCanvas元素会擦除笔画。如果用户使用手写笔，可使用手写笔的底端切换到该模式
+EraseByPoint | 当单击笔画时，InkCanvas元素会擦除笔画中被单击的部分（笔画上的一个点）
+Select | InkCanvas面板允许用户选择保存在Children集合中的元素，要选择一个元素，用户必须单击该元素或拖动“套索”选择该元素。一旦选择一个元素，就可以移动该元素、改变其尺寸或将其删除
+None | InkCanvas元素忽略鼠标和手写笔输入
+
+InkCanvas元素会引发多种事件，当编辑模式改变时会引发ActiveEditingModeChanged事件，在GestureOnly或InkAndGesture模式下删除姿势时会引发Gesture事件，绘制完笔画时会引发StrokeCollected事件，擦除笔画时会引发StrokeErasing事件和StrokeErased事件，在Select模式下选择元素或改变元素时会引发SelectionChanging事件、SelectionChanged事件、SelectionMoving事件、SelectionMoved事件、SelectionResizing事件和SelectionResized事件。其中名称以ing结尾的事件表示动作将要发生，但可以通过设置EventArgs对象的Cancel属性取消事件。
+
+在Select模式下，InkCanvas元素可为拖动以及操作内容提供功能强大的设计界面。显然Select模式很有趣，但并不适合于构建绘图工具。
 
 ## 六、布局实例 ##
+
+* 列设置
+* 动态内容
+* 组合式用户界面
+
+具体内容实践会进行详细操作。
