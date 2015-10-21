@@ -574,6 +574,21 @@ Canvas面板还是最轻量级的布局容器。这是因为Canvas面板没有�
 
 #### 5.1 Z顺序
 
+如果Canvas面板中有多个互相重叠的元素，可通过设置Canvas.ZIndex附加属性来控制他们的层叠方式。
+
+添加的所有元素通常都具有相同的ZIndex值——0.如果元素具有相同的ZIndex值，就按它们在Canvas.Children集合中的顺序进行显示，这个顺序依赖于元素在XAML标记中定义的顺序。在标记中靠后位置声明的元素（如按钮（70，120））会显示在前面声明的元素（如按钮（120，30））的上面。
+
+然而，可通过增加任何子元素的ZIndex值来提高层次级别。因为具有更高ZIndex值的元素始终显示在较低ZIndex值的元素的上面。使用这一技术，可改变前一示例中的分层情况：
+
+```xml
+  <Button Canvas.Left="60" Canvas.Top="80" Canvas.ZIndex="1" Width="50" Height="50">(60,80)</Button>
+  <Button Canvas.Left="70" Canvas.Top="120" Width="100" Height="50">(70,120)</Button>
+```
+
+注意：应用于Canvas.ZIndex属性的实际值并无意义。重要细节的是一个元素的ZIndex值和另一个元素的ZIndex值相比较如何。可将ZIndex属性设置为任何正整数或负整数。
+
+如果需要通过代码来改变元素的位置，ZIndex属性是非常有用的。只需要调用Canvas.SetZIndex()方法，并传递希望修改的元素和希望使用的新ZIndex值即可。遗憾的是，并不存在BringToFront()或SendToBack()方法——要实现这一行为，需要跟踪最高和最低的ZIndex值。
+
 #### 5.2 linkCanvas元素
 
 ## 六、布局实例 ##
