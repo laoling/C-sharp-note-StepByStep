@@ -71,6 +71,8 @@ Move() | 将指定的文件移动到新位置，可以在新位置为文件指�
 
 Directory类的一些常用静态方法如下：
 
+方法 | 说明
+:--:|:---
 CreateDirectory() | 创建具有指定路径的目录
 Delete() | 删除指定的目录及其中的所有文件
 GetDirectories() | 返回表示指定目录下的目录名的String对象数组
