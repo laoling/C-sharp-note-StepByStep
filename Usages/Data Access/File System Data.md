@@ -33,6 +33,44 @@
 
 ## 二、用于输入和输出的类 ##
 
+System.IO命名空间包含本节几乎所有的类。System.IO包含用于在文件中读写数据的类，必须在C#应用程序中引用此名称空间才能访问这些类，而无需完全限定类型名。在System.IO命名空间中包含了不少类，但这里我们介绍用于文件输入和输出的主要类。
+
+类 | 说明
+:--:|:---
+File | 静态实用类，提供许多静态方法，用于移动、复制和删除文件
+Directory | 静态实用类，提供许多静态方法，用于移动、复制和删除目录
+Path | 实用类，用于处理路径名称
+FileInfo | 表示磁盘上的物理文件，该类包含处理此文件的方法。要完成对文件的读写工作，就必须创建Stream对象
+DirectoryInfo | 表示磁盘上的物理目录，该类包含处理此目录的方法
+FileStream | 表示可写或可读，或二者均可的文件。此文件可以同步或异步地读写
+FileStreamInfo | 用作FileInfo和DirectoryInfo的基类，可以使用多态性同时处理文件和目录
+StreamReader | 从流中读取字符数据，可以使用FileStream将其创建为基类
+StreamWriter | 向流中写入字符数据，可以使用FileStream将其创建为基类
+FileSystemWatcher | FileSystemWatcher是这里最复杂的类。它用于监控文件和目录，提供了这些文件和目录发生变化时应用程序可以捕获的事件。在Windows编程技术中缺乏此功能，但现在.NET很容器对文件系统事件作出响应
+
+本章还将介绍System.IO.Compression名称空间，它允许使用GZIP压缩或Deflate压缩模式读写压缩文件：
+
+* DeflateStream——表示在写入时自动压缩数据或在读取时自动解压缩的流，使用Deflate算法来实现压缩。
+* GZipStream——表示在写入时自动压缩数据或在读取时自动解压缩的流，使用GZIP算法来实现压缩。
+
+最后，学习使用System.Runtime.Serialization名称空间及其子命名空间进行对象的序列化，主要介绍System.Runtime.Serialization.Formatters.Binary名称空间中的BinaryFormatter类，它允许把对象序列化为二进制数据流，并可以反序列化这些数据。
+
+### 1.File类和Directory类
+
+### 2.FileInfo类
+
+### 3.DirectoryInfo类
+
+### 4.路径名和相对路径
+
+### 5.FileStream对象
+
+### 6.StreamWriter对象
+
+### 7.StreamReader对象
+
+### 8.读写压缩文件
+
 ## 三、序列化对象 ##
 
 ## 四、监控文件系统 ##
