@@ -57,6 +57,32 @@ FileSystemWatcher | FileSystemWatcher是这里最复杂的类。它用于监控�
 
 ### 1.File类和Directory类
 
+File和Directory实用类提供了许多静态方法，用于处理文件和目录。这些方法可以移动文件、查询和更新特性，创建FileStream对象。可以在类上调用静态方法，而无需创建它们的实例。
+
+File类的一些最常用的静态方法如下：
+
+方法 | 说明
+:--:|:---
+Copy() | 将文件从源位置复制到目标位置
+Create() | 在指定的路径上创建文件
+Delete() | 删除文件
+Open() | 返回指定路径上的FileStream对象
+Move() | 将指定的文件移动到新位置，可以在新位置为文件指定不同的名称
+
+Directory类的一些常用静态方法如下：
+
+CreateDirectory() | 创建具有指定路径的目录
+Delete() | 删除指定的目录及其中的所有文件
+GetDirectories() | 返回表示指定目录下的目录名的String对象数组
+EnumerateDirectories() | 与GetDirectories()类似。但返回目录名的`IEnumerable<string>`集合
+GetFiles() | 返回在指定目录中的文件名的string对象数组
+EnumerateFiles() | 与GetFiles()类似，但返回文件名的`IEnumerable<string>`集合
+GetFileSystemEntries() | 返回在指定目录中的文件和目录名的string对象数组
+EnumerateFileSystemEntries() | 与GetFileSystemEntries()类似，但返回文件名的`IEnumerable<string>`集合
+Move() | 将指定的目录移到新位置。可以在新位置为文件夹指定一个新名称
+
+注：其中EnumerateXxx()方法是.NET 4新增的，在存在大量文件和目录时，其性能比对应的GetXxx()方法好用。
+
 ### 2.FileInfo类
 
 ### 3.DirectoryInfo类
