@@ -144,7 +144,27 @@ FileInfo对象本身不表示流。要读写文件，必须创建Stream对象。
 
 ### 3.DirectoryInfo类
 
+DirectoryInfo类的作用类似于FileInfo类。它是一个实例化的对象，表示计算机上的单一目录。同FileInfo类一样，在Directory和DirectoryInfo之间可以复制许多方法调用。选择使用File或FileInfo方法的规则也适用于DirectoryInfo方法：
+
+* 如果进行单一调用，就使用静态Directory类。
+* 如果进行一系列调用，则使用实例化的DirectoryInfo对象。
+
+DirectoryInfo类的大多数属性继承自FileSystemInfo，与FileInfo类一样，但这些属性作用于目录上，而不是文件上。还有两个DirectoryInfo专用属性，如下表：
+
+属性 | 说明
+:--:|:---
+Parent | 检索一个DirectoryInfo对象，表示包含当前目录的目录。这个属性是只读的
+Root | 检索一个DirectoryInfo对象，表示包含当前目录的根目录，例如C:\目录。这个属性是只读的
+
 ### 4.路径名和相对路径
+
+在.NET代码中规定路径名时，可以使用绝对路径名，也可以使用相对路径名。绝对路径名显式地规定文件或目录来自于哪一个已知的位置，比如C:驱动器。它的一个示例是C:\Work\LogFile.txt。注意这个路径准确地定义了其位置。
+
+相对路径名相对于一个起始位置。使用相对路径名时，无需规定驱动器或已知的位置；前面的当前工作目录就是起点，这是相对路径名的默认设置。例如，如果应用程序运行在C:\Development\FileDemo目录上，并使用相对路径LogFile.txt，该文件就是C:\Development\FileDemo\LogFile.txt。为了上移目录，要使用..字符串。这样，在同一个应用程序中，路径..\Log.txt表示C:\Development\Log.txt文件。
+
+如前所述，工作目录起始设置为运行应用程序的目录。当使用VS开发程序时，这就表示应用程序是所创建的项目文件夹下的几个目录。它通常位于Project\bin\Debug。要访问项目根文件夹中的文件，必须用..\..\上移两个目录。
+
+只要需要，就可以使用Directory.GetCurrentDirectory()找出工作目录的当前设置，也可以使用Directory.SetCurrentDirectory()设置新路径。
 
 ### 5.FileStream对象
 
