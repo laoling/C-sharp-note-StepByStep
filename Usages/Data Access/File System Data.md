@@ -87,6 +87,61 @@ Move() | 将指定的目录移到新位置。可以在新位置为文件夹指�
 
 ### 2.FileInfo类
 
+FileInfo类不像File类，它不是静态的，没有静态方法，仅可用于实例化的对象。FileInfo对象表示磁盘或网络位置上的文件。提供文件路径，就可以创建一个FileInfo对象：
+
+```csharp
+FileInfo aFile = new FileInfo(@"C:\Log.txt");
+```
+
+注意：本章处理的是表示文件路径的字符串，该字符串中有许多“\”字符，所有上述字符串的前缀@表示这个字符串应逐个字符解释，“\”解释为“\”，而不是转义字符。如果没有@前缀，就需要使用“\\”代替“\”，以免把这个字符解释为转义字符，这里总是在字符串前面加上@前缀。
+
+也可以把目录名传送给FileInfo的构造函数，但实际上这并不是很有效。这么做会用所有的目录信息初始化FileInfo的基类FilesSystemInfo，但FileInfo中与文件相关的专用方法或属性都不会工作。
+
+FileInfo类提供的许多方法类似于File类的方法，但是因为File是静态类，它需要一个字符串参数为每个方法调用指定文件位置。因此，下面的调用可以完成相同的工作：
+
+```csharp
+FileInfo aFile = new FileInfo("Data.txt");
+
+if (aFile.Exists)
+	Console.WriteLine("File Exists");
+
+if (File.Exists("Data.txt"))
+	Console.WriteLine("File Exists");
+```
+
+这段代码检查文件Data.txt是否存在。注意，这里没有指定任何目录信息，这说明只检查当前的工作目录。这个目录包含调用此代码的应用程序。
+
+大多数FileInfo方法采用这种方式反映File方法。在大多数情况下使用什么技术并不重要，但下面的规则有助于确定那种技术更合适：
+
+* 如果仅进行单一方法调用，则可以使用静态File类上的方法。在此，单一调用要快一些，因为.NET Framework不必实例化新对象，再调用方法。
+* 如果应用程序在文件上执行几种操作，则实例化FileInfo对象并使用其方法就更好一些。这节省时间，因为对象已在文件系统上引用正确文件，而静态类必须每次都寻找文件。
+
+FileInfo类也提供了与底层文件相关的属性，其中一些属性可以用来更新文件，其中很多属性都继承于FileSystemInfo，所有可应用于File和Directory类。
+
+FileSystemInfo类的属性如下表：
+
+属性 | 说明
+:--:|:---
+Attributes | 使用FileAttributes枚举，获得或者设置当前文件或目录的特性
+CreationTime,CreationTimeUtc | 获取当前文件的创建日期和时间，可以使用UTC和非UTC版本
+Extension | 提取文件的扩展名。这个属性是只读的
+Exists | 确定文件是否存在，这是一个只读抽象属性，在FileInfo和DirectoryInfo中进行了重写
+FullName | 检索文件的完整路径，这个属性是只读的
+LastAccessTime,LastAccessTimeUtc | 获取或设置上次访问当前文件的日期和时间，可以使用UTC和非UTC版本
+LastWriteTime,LastWriteTimeUtc | 获取或设置上次写入当前文件的日期和时间，可以使用UTC和非UTC版本
+Name | 检索文件的完整路径，这是一个只读抽象属性，在FileInfo和DirectoryInfo中进行了重写
+
+FileInfo的专用属性如下表：
+
+属性 | 说明
+:--:|:---
+Directory | 检索一个DirectoryInfo对象，表示包含当前文件的目录。这个属性是只读的
+DirectoryName | 返回文件目录的路径。这个属性是只读的
+IsReadOnly | 文件只读特性的快捷方式。这个属性也可以通过Attributes来访问
+Length | 获取文件的容量（以字节为单位），返回long值。这个属性是只读的
+
+FileInfo对象本身不表示流。要读写文件，必须创建Stream对象。FileInfo对象提供了几个返回实例化Stream对象的方法来帮助做到这一点。
+
 ### 3.DirectoryInfo类
 
 ### 4.路径名和相对路径
