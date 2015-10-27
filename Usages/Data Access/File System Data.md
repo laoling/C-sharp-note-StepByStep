@@ -168,6 +168,58 @@ Root | 检索一个DirectoryInfo对象，表示包含当前目录的根目录，
 
 ### 5.FileStream对象
 
+FileStream对象表示在磁盘或网络路径上指向文件的流。这个类提供了在文件中读写字节的方法。但经常使用StreamReader或StreamWriter执行这些功能。这是因为FileStream类操作的是字节和字节数组，而Stream类操作的是字符数据。字符数据易于使用，但是有些操作，如随机文件访问（访问文件中间某点的数据），就必须由FileStream对象执行，稍后对此进行介绍。
+
+还有几种方法可以创建FileStream对象。构造函数具有许多不同的重载版本，最简单的构造函数仅有两个参数，即文件名和FileMode枚举值。
+
+```csharp
+FileStream aFile = new FileStream(filename, FileMode.Member);
+```
+
+FileMode枚举包含几个成员，指定了如何打开或创建文件。稍后介绍这些枚举成员。另一个常用的构造函数如下：
+
+```csharp
+FileStream aFile = new FileStream(filename, FileMode.Member, FileAccess.Member);
+```
+
+第三个参数是FileAccess枚举的一个成员，它指定了流的作用。FileAccess枚举的成员如下表：
+
+成员 | 说明
+:---:|:----
+Read | 打开文件，用于只读
+Write | 打开文件，用于只写
+ReadWrite | 打开文件，用于读写
+
+对文件进行非FileAccess枚举成员指定的操作会导致抛出异常。此属性的作用是，基于用户的身份验证级别改变用户对文件的访问权限。
+
+在FileStream构造函数不使用FileAccess枚举参数的版本中，使用默认值FileAccess.ReadWrite。
+
+FileMode枚举成员如下表所示。使用每个值会发生什么，取决于指定的文件名是否表示已有的文件。注意，这个表中的项表示创建流时该流指向文件中的位置，除非特别说明，否则流就指向文件的开头。
+
+成员 | 文件存在 | 文件不存在
+:---:|:-------|:----------
+Append | 打开文件，流指向文件的末尾，只能与枚举FileAccess.Write结合使用 | 创建一个新文件。只能与枚举FileAccess.Write结合使用
+Create | 删除该文件，然后创建新文件 | 创建新文件
+CreateNew | 抛出异常 | 创建新文件
+Open | 打开现有文件，流指向文件开头 | 抛出异常
+OpenOrCreate | 打开文件，流指向文件开头 | 创建新文件
+Truncate | 打开现有文件，清除其内容。流指向文件开头，保留文件的初始创建日期 | 抛出异常
+
+File和FileInfo类都提供了OpenRead()和OpenWrite()方法，更易于创建FileStream对象。前者打开了只读访问的文件，后者只允许写入文件。这些都提供了快捷方式，因此不必以FileStream构造函数的参数提供前面所有的信息。
+
+例如下面的代码打开了用于只读访问的Data.txt文件：
+
+```csharp
+FileStream aFile = File.OpenRead("Data.txt");
+```
+
+下面的代码执行同样的功能：
+
+```csharp
+FileInfo aFileInfo = new FileInfo("Data.txt");
+FileStream aFile = aFileInfo.OpenRead();
+```
+
 ### 6.StreamWriter对象
 
 ### 7.StreamReader对象
