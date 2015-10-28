@@ -300,6 +300,77 @@ StreamWriter sw = new StreamWriter("Log.txt", true);
 
 ### 7.StreamReader对象
 
+输入流用于从外部源中读取数据。很多情况下，数据源是磁盘上的文件或网络的某些位置。任何可以发送数据的位置都可以是数据源，比如网络应用程序、Web服务甚至是控制台。
+
+用来从文件中读取数据的类是StreamReader。同StreamWriter一样，这是一个通用类，可以用于任何流。
+
+我们将创建示例，会再次围绕FileStream对象构造StreamReader类，使它指向正确的文件。
+
+StreamReader对象的创建方式和StreamWriter对象非常类似。创建它的最常见方式是使用前面创建的FileStream对象：
+
+```csharp
+FileStream aFile = new FileStream("Log.txt", FileMode.Open);
+StreamReader sr = new StreamReader(aFile);
+```
+
+同StreamWriter一样，StreamReader类可以直接在包含具体文件路径的字符串中创建：
+
+```csharp
+StreamReader sr = new StreamReader("Log.txt");
+```
+
+**1、读取数据**
+
+ReadLine()方法不是在文件中访问数据的唯一方法。StreamReader类还包含许多读取数据的方法。
+
+读取数据最简单的方法是Read()。此方法将流的下一个字符作为正整数值返回，如果到达了流的结尾处，则返回-1.使用Convert实用类可以把这个值转换为字符。
+
+我们可以像下面这样读取转换文本：
+
+```csharp
+StreamReader sr = new StreamReader(aFile);
+int nChar;
+nChar = sr.Read();
+while (nChar != -1)
+{
+	Console.Write(Convert.ToChar(nChar));
+	nChar = sr.Reader();
+}
+sr.Close();
+```
+
+对于小型文件，可以使用一个非常方便的方法ReadToEnd()。此方法读取整个文件，并将其作为字符串返回。在此，上面的程序可以简化为：
+
+```csharp
+StreamReader sr = new StreamReader(aFile);
+Line = sr.ReadToEnd();
+Console.WriteLine(Line);
+sr.Close();
+```
+
+这似乎比较容易和方便，但必须小心。将所有的数据读取到字符串对象中，会迫使文件中的数据放到内存中。应根据数据文件的大小禁止这样的处理。如果数据文件非常大，最好将数据留在文件中，并使用StreamReader的方法访问文件。
+
+处理大型文件的另一种方式是.NET 4中新增的静态方法File.ReadLines()。实际上，File的几个静态方法可以用于简化文件数据的读写，但这个方法特别有趣，因为它返回`IEnumerable<string>`集合。可以迭代这个集合中的字符串，一次读取文件中的一行。使用这个方法，前面的示例可以重写为：
+
+```csharp
+foreach (string alternativeLine in File.ReadLines("Log.txt"))
+	Console.WriteLine(alternativeLine);
+```
+
+可以看出在.NET中可以通过多种不同的方式获得相同的结果——读取文件中的数据。你可以选择其中最适当的技术。
+
+**2、用分隔符分隔的文件**
+
+用分隔符分隔的文件是一种常见的数据存储形式，由许多旧系统使用，如果应用程序必须与这种操作系统协作，就会经常遇到分隔符分隔的数据格式。最常见的分隔符是逗号，例如Excel电子表格，Access数据库或SQL Server数据库中的数据都可以导出为用逗号分隔的值——CSV文件。
+
+前面介绍了如何使用StreamWriter类编写使用这种方法存储数据的文件。使用逗号分隔的文件也易于读取。String类的Split()方法可以用于将字符串转换为基于所提供的分隔符的数组。如果规定逗号为分隔符，它就会创建尺度合理的字符串数组，其中包含在初始逗号分隔的字符串中的全部数据。
+
+使用.NET Framework从CSV文件中提取有意义的数据非常容易。这种技术也很容易与后面介绍的数据访问技术合并使用，即CSV文件中的数据可以像其他数据源中的数据那样操作。
+
+但从CSV文件中提取的数据没有数据类型信息。当前是把所有的数据看作字符串，但对于企业级的商务应用来说，就需要更进一步，给提取的数据添加类型信息。这可能来自存储在CSV文件中的附加信息，可以手工进行配置，也可以从文件的字符串中推断，具体取决于特定的应用程序。
+
+后面介绍的XML也是一种存储和传输数据的优秀方法，而CSV文件仍然非常普遍，还会使用相当长的时间。逗号分隔文件的优点是非常简洁，因此要比XML文件小些。
+
 ### 8.读写压缩文件
 
 ## 三、序列化对象 ##
