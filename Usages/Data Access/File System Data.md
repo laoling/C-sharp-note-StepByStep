@@ -272,6 +272,32 @@ FileStream.Read()方法是从FileStream对象所指向的文件中访问数据�
 
 ### 6.StreamWriter对象
 
+操作字节数组比较麻烦，因为FileStream对象非常困难。因为有了FileStream对象，通常都会把它包装在StreamWriter或StreamReader中，并使用它们的方法来处理文件。如果不需要将文件指针改变到任意位置，这些类就很容易操作文件。
+
+StreamWriter类允许将字符和字符串写入到文件中，它处理底层的转换，向FileStream对象写入数据。
+
+也可以通过许多方法创建StreamWriter对象。如果已经有了FileStream对象，则可以使用此对象来创建StreamWriter对象：
+
+```csharp
+FileStream aFile = new FileStream("Log.txt", FileMode.CreateNew);
+StreamWriter sw = new StreamWriter(aFile);
+```
+
+也可以直接从文件中创建StreamWriter对象：
+
+```csharp
+StreamWriter sw = new StreamWriter("Log.txt", true);
+```
+
+这个构造函数的参数是文件名和一个Boolean值，这个Boolean值规定是追加文件，还是创建新文件：
+
+* 如果此值设置为false，则创建一个新文件，或者截取现有文件并打开它。
+* 如果此值设置为true，则打开文件，保留原来的数据。如果找不到文件，则创建一个新文件。
+
+与创建FileStream对象不同，创建StreamWriter对象不会提供一组类似的选项：除了使用Boolean值追加文件或创建新文件之外，根本没有像FileStream类那样指定FileMode属性的选项。而且，没有设置FileAccess属性的选项，因此总是拥有对文件的读写权限。
+
+为了使用高级参数，必须先在FileStream构造函数中指定这些参数，然后在FileStream对象中创建StreamWriter。实际例子中我们会对这点进行演示。
+
 ### 7.StreamReader对象
 
 ### 8.读写压缩文件
