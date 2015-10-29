@@ -412,4 +412,38 @@ static void LoadComperssedFile(string filename)
 
 ## 三、序列化对象 ##
 
+应用程序常常需要在硬盘上存储数据。本节前面介绍了逐段构建文本和数据文件，但这常常不是最简单的方式。有时最好以对象形式存储数据。
+
+.NET Framework在System.Runtime.Serialization和System.Runtime.Serialization.Formatters名称空间中提供了序列化对象的基础构架，这两个名称空间中的一些类实现了这个基础构架。Framework中有两个可用的实现方式：
+
+* System.Runtime.Serialization.Formatters.Binary：这个名称空间包含了BinaryFormatter类，它能把对象序列化为二进制数据，把二进制数据序列化为对象。
+* System.Runtime.Serialization.Formatters.Soap：这个名称空间包含了SoapFormatter类，它能把对象序列化为SOAP格式的XML数据，把SOAP格式的XML数据序列化为对象。
+
+这里只介绍BinaryFormatter，因为还没有学习XML数据。实际上不鼓励使用SoapFormatter格式化器，但希望进行可读的序列化时，仍可以使用它。这两个类都实现了IFormatter接口，这里讨论的很多内容都适用于这两个类。
+
+IFormatter接口提供了下表中所示的方法：
+
+方法 | 说明
+:---:|:----
+void Serialize(Stream stream, object source) | 把source序列化为stream
+object Descrialize(Stream stream) | 反序列化stream中的数据，返回得到的对象
+
+重要的是，为了便于讨论，这些方法都处理流，以便把这些方法与本节前面介绍的文件访问技术联系起来——可以使用FileStream对象。
+
+所有，使用BinaryFormatter进行序列化非常简单：
+
+```csharp
+IFormatter serializer = new BinaryFormatter();
+serializer.Serialize(myStream, myObject);
+```
+
+反序列化同样也很简单：
+
+```csharp
+IFormatter serializer = new BinaryFormatter();
+myObjectType myNewObject = serializer.Deserialize(myStream) as MyObjectType;
+```
+
+显然，需要流和对象才能进行处理，但上面的代码对于几乎所有的情况都是正确的。
+
 ## 四、监控文件系统 ##
