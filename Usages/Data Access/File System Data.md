@@ -373,6 +373,43 @@ foreach (string alternativeLine in File.ReadLines("Log.txt"))
 
 ### 8.读写压缩文件
 
+在处理文件时，常常会发现文件中有许多空格，耗尽了硬盘空间。图形和声音文件尤其如此。读者可能使用过压缩文件和解压缩文件的工具，当希望带着文件到其他地方去或者把文件邮寄给朋友时，使用这些工具是很方便的。System.IO.Compression名称空间就包含能在代码中压缩文件的类，这些类使用GZIP或Deflate算法，这两种算法都是公开的、免费的，任何人都可以使用的。
+
+但压缩文件并不只是把它们压缩一下就完事了。商业应用程序允许把多个文件放在一个压缩文件中，本节介绍的内容要简单的多：只是把文本数据保存在压缩文件中。不能在外部实用程序中访问这个文件，但这个文件比未压缩版本要小得多。
+
+System.IO.Compression名称空间中有两个压缩流类DeflateStream和GZipStream。它们的工作方式非常类似。对于这两个类，都要用已有的流初始化它们，对于文件，流就是FileStream对象。此后就可以把它们用于StreamReader和StreamWriter了，就像使用其他流一样。除此之外，只需指定流是用于压缩还是解压缩，类就知道要对传送给它的数据执行什么操作。
+
+示例：保存和加载已压缩的文本文件
+
+```csharp
+static void SaveComperssedFile(string filename, string data)
+{
+	FileStream fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write);
+	GZipStream compressionStream =
+	new GZipStream(fileStream, CompressionMode.Compress);
+	StreamWriter writer = new StreamWriter(compressionStream);
+	writer.Write(data);
+	writer.Close();
+}
+```
+
+代码首先创建一个FileStream对象，然后使用它创建一个GZipStream对象。注意，可以用DeflateStream替换这段代码中的所有GZipStream——这两个类的工作方式相同。使用CompressionMode.Compress枚举值指定数据要进行压缩，然后使用StreamWriter把数据写入文件。
+
+下面再写一个LoadCompressedFile()，它不是保存到文件中，而是把压缩的文件加载到字符串中：
+
+```csharp
+static void LoadComperssedFile(string filename)
+{
+	FileStream fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+	GZipStream compressionStream =
+	new GZipStream(fileStream, CompressionMode.Decompress);
+	StreamReader reader = new StreamReader(compressionStream);
+	string data = reader.ReadToEnd();
+	reader.Close();
+	return data;
+}
+```
+
 ## 三、序列化对象 ##
 
 ## 四、监控文件系统 ##
